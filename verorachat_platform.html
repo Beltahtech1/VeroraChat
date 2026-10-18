@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>VeroraChat - Global Paid Chat & M-Pesa Monetization Platform</title>
+
+  <!-- OpenGraph / Social Previews -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://verorachat.vercel.app/" />
+  <meta property="og:title" content="VeroraChat - Earn Up to KSh 150/Min Chatting Online" />
+  <meta property="og:description" content="Connect with global clients, provide text support, and get paid instantly to your M-Pesa account via Till 7968544." />
+  <meta property="og:image" content="https://placehold.co/1200x630/090d16/10b981?text=VeroraChat+M-Pesa+Platform" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="VeroraChat - Monetize Your Conversations" />
+  <meta name="twitter:description" content="Earn KSh 120 - KSh 350 per message with verified US, UK & EU clients. M-Pesa instant payouts." />
+  <meta name="twitter:image" content="https://placehold.co/1200x630/090d16/10b981?text=VeroraChat+M-Pesa+Platform" />
+
+  <!-- Mobile App Meta -->
+  <meta name="theme-color" content="#020617" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+  <!-- Favicon (Inline SVG Data URI) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💬</text></svg>" />
+
+  <!-- Inline Web App Manifest Data URI -->
+  <link rel="manifest" href="data:application/manifest+json,{%22name%22:%22VeroraChat%22,%22short_name%22:%22VeroraChat%22,%22start_url%22:%22./#home%22,%22display%22:%22standalone%22,%22background_color%22:%22%23020617%22,%22theme_color%22:%22%2310b981%22}" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              900: '#064e3b',
+            },
+            accent: {
+              400: '#38bdf8',
+              500: '#0ea5e9',
+              600: '#0284c7',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+          animation: {
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'glow': 'glow 2s ease-in-out infinite alternate',
+          },
+          keyframes: {
+            glow: {
+              '0%': { boxShadow: '0 0 15px rgba(16, 185, 129, 0.3)' },
+              '100%': { boxShadow: '0 0 30px rgba(16, 185, 129, 0.7)' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Phosphor Icons CDN -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <style>
+    /* Custom Scrollbars & Utilities */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #020617; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #10b981; }
+
+    .glass-card {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .glass-nav {
+      background: rgba(2, 6, 23, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .bg-mesh {
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.12) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(14, 165, 233, 0.12) 0px, transparent 50%),
+        radial-gradient(at 50% 50%, rgba(30, 41, 59, 0.5) 0px, transparent 100%);
+    }
+  </style>
+</head>
+
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col selection:bg-brand-500 selection:text-slate-950 bg-mesh antialiased">
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="fixed top-20 right-4 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none"></div>
+
+  <!-- Header / Navigation -->
+  <header class="sticky top-0 z-40 w-full glass-nav border-b border-slate-800/80 transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="#home" class="flex items-center gap-2 group">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-accent-500 flex items-center justify-center text-slate-950 shadow-lg shadow-brand-500/20 group-hover:scale-105 transition-transform">
+          <i class="ph-bold ph-chat-teardrop-dots text-2xl"></i>
+        </div>
+        <div>
+          <span class="text-xl font-bold tracking-tight bg-gradient-to-r from-white via-slate-200 to-brand-500 bg-clip-text text-transparent">VeroraChat</span>
+          <span class="text-[10px] block font-mono text-emerald-400 tracking-wider -mt-1 uppercase">M-Pesa Verified</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav Menu -->
+      <nav class="hidden md:flex items-center gap-1 lg:gap-2 text-sm font-medium">
+        <a href="#home" class="nav-link px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/60 transition" data-route="home">Home</a>
+        <a href="#chat" class="nav-link px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/60 transition flex items-center gap-1.5" data-route="chat">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Sandbox Chat
+        </a>
+        <a href="#calculator" class="nav-link px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/60 transition" data-route="calculator">Earnings Calc</a>
+        <a href="#marketplace" class="nav-link px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/60 transition" data-route="marketplace">Marketplace</a>
+        <a href="#api-config" class="nav-link px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/60 transition" data-route="api-config">Daraja API</a>
+        <a href="#deploy-guide" class="nav-link px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/60 transition" data-route="deploy-guide">Deploy Guide</a>
+      </nav>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center gap-3">
+        <!-- Currency Switcher Toggle -->
+        <button id="currency-toggle-btn" onclick="toggleCurrency()" class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-xs font-mono text-slate-300 hover:border-brand-500 transition">
+          <i class="ph-bold ph-currency-circle-dollar text-brand-500"></i>
+          <span id="currency-label">KSh (KES)</span>
+        </button>
+
+        <a href="#activation" class="px-4 py-2 rounded-xl bg-gradient-to-r from-brand-500 to-emerald-600 hover:from-brand-600 hover:to-emerald-700 text-slate-950 font-semibold text-sm shadow-md shadow-brand-500/20 hover:shadow-brand-500/40 transition-all flex items-center gap-1.5 transform hover:-translate-y-0.5">
+          <i class="ph-bold ph-lightning text-slate-950"></i> Activate Account
+        </a>
+
+        <!-- Mobile Menu Toggle -->
+        <button onclick="toggleMobileMenu()" class="md:hidden p-2 text-slate-400 hover:text-white focus:outline-none">
+          <i id="menu-icon" class="ph-bold ph-list text-2xl"></i>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Mobile Nav Dropdown -->
+    <div id="mobile-menu" class="hidden md:hidden border-b border-slate-800 bg-slate-950/95 px-4 pt-2 pb-4 space-y-2 text-sm font-medium">
+      <a href="#home" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800">Home</a>
+      <a href="#chat" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800">Live Chat Sandbox</a>
+      <a href="#calculator" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800">Calculator</a>
+      <a href="#marketplace" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800">Marketplace</a>
+      <a href="#activation" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800">M-Pesa Activation</a>
+      <a href="#api-config" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800">Daraja API Dev Hub</a>
+      <a href="#deploy-guide" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800">Hosting & Deploy Guide</a>
+    </div>
+  </header>
+
+  <!-- Live Payout Ticker Bar -->
+  <div class="bg-slate-900/90 border-b border-slate-800/60 py-1.5 overflow-hidden text-xs font-mono">
+    <div class="max-w-7xl mx-auto px-4 flex items-center">
+      <span class="flex items-center gap-1 text-emerald-400 font-semibold uppercase tracking-wider shrink-0 mr-4">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span> Live Payouts
+      </span>
+      <div class="overflow-hidden whitespace-nowrap w-full">
+        <div id="ticker-content" class="inline-block animate-marquee space-x-8 text-slate-400">
+          <span>🚀 <strong class="text-white">Nairobi Agent #491</strong> withdrew <strong class="text-emerald-400">KSh 4,850</strong> via M-Pesa</span>
+          <span>⚡ <strong class="text-white">Eldoret Agent #120</strong> earned <strong class="text-emerald-400">KSh 1,200</strong> in 20 mins</span>
+          <span>💬 <strong class="text-white">Mombasa Agent #882</strong> answered 45 US messages</span>
+          <span>✅ <strong class="text-white">M-Pesa Till 7968544</strong> auto-credited KSh 150 activation bonus</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN VIEW ENGINE CONTAINER -->
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- ========================================== -->
+    <!-- VIEW 1: HOME PAGE HERO & PROOF SECTION     -->
+    <!-- ========================================== -->
+    <section id="view-home" class="view-section space-y-16">
+      
+      <!-- Hero -->
+      <div class="relative pt-6 pb-12 text-center max-w-4xl mx-auto space-y-8">
+        
+        <!-- Live System Status Badge -->
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900 border border-emerald-500/30 text-xs text-slate-300 shadow-inner">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>Daraja M-Pesa Till <strong class="text-emerald-400">7968544</strong> Operational</span>
+          <span class="text-slate-600">|</span>
+          <span class="text-slate-400">Avg. Payout Time: <strong class="text-white">3 Seconds</strong></span>
+        </div>
+
+        <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white leading-tight">
+          Turn Simple Chat Conversations Into <span class="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">Instant M-Pesa Cash</span>
+        </h1>
+
+        <p class="text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
+          Get paid up to <strong class="text-white font-semibold">KSh 150 - 350 per response</strong> answering queries for international clients. Zero technical background required. Direct M-Pesa STK Push integration.
+        </p>
+
+        <!-- CTA Buttons -->
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+          <a href="#chat" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-brand-500 to-emerald-600 hover:from-brand-600 hover:to-emerald-700 text-slate-950 font-bold text-base shadow-xl shadow-brand-500/25 transition-all flex items-center justify-center gap-2 transform hover:-translate-y-1">
+            <i class="ph-bold ph-play-circle text-xl"></i> Try Live Chat Sandbox
+          </a>
+          <a href="#activation" class="w-full sm:w-auto px-8 py-4 rounded-xl glass-card hover:bg-slate-800/80 text-white font-bold text-base border border-slate-700 transition flex items-center justify-center gap-2">
+            <i class="ph-bold ph-shield-check text-emerald-400 text-xl"></i> Activate via Till 7968544
+          </a>
+        </div>
+
+        <!-- Trust Badges -->
+        <div class="pt-8 border-t border-slate-800/60 grid grid-cols-2 md:grid-cols-4 gap-4 text-slate-400 text-xs">
+          <div class="flex items-center justify-center gap-2">
+            <i class="ph-fill ph-check-circle text-emerald-400 text-base"></i> Direct M-Pesa Cash
+          </div>
+          <div class="flex items-center justify-center gap-2">
+            <i class="ph-fill ph-lock-key text-emerald-400 text-base"></i> 256-Bit SSL Secured
+          </div>
+          <div class="flex items-center justify-center gap-2">
+            <i class="ph-fill ph-globe text-emerald-400 text-base"></i> US / UK / EU Market
+          </div>
+          <div class="flex items-center justify-center gap-2">
+            <i class="ph-fill ph-clock text-emerald-400 text-base"></i> 24/7 Instant Withdrawals
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Feature Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <div class="glass-card p-6 rounded-2xl hover:border-brand-500/40 transition space-y-4 group">
+          <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+            <i class="ph-bold ph-chat-centered-text"></i>
+          </div>
+          <h3 class="text-xl font-bold text-white">1. Connect & Respond</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            Select high-demand clients from our active global partner list. Answer simple customer queries using predefined templates or custom replies.
+          </p>
+        </div>
+
+        <div class="glass-card p-6 rounded-2xl hover:border-brand-500/40 transition space-y-4 group">
+          <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+            <i class="ph-bold ph-wallet"></i>
+          </div>
+          <h3 class="text-xl font-bold text-white">2. Accumulate Cash</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            Every validated message credits your Verora Wallet immediately. Track real-time earnings in KSh or USD directly on your live agent dashboard.
+          </p>
+        </div>
+
+        <div class="glass-card p-6 rounded-2xl hover:border-brand-500/40 transition space-y-4 group">
+          <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+            <i class="ph-bold ph-arrows-down-up"></i>
+          </div>
+          <h3 class="text-xl font-bold text-white">3. M-Pesa STK Payouts</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            Withdraw funds with 1-click directly to your Safaricom M-Pesa mobile line via automated Daraja B2C API transfers.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Proof Gallery / Recent Member Receipts -->
+      <div class="glass-card p-8 rounded-3xl border border-slate-800 space-y-6">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div>
+            <h2 class="text-2xl font-bold text-white">Verified Member Proof & Payouts</h2>
+            <p class="text-slate-400 text-sm">Real-time confirmation of recent automated Safaricom M-Pesa payouts.</p>
+          </div>
+          <button onclick="showReceiptSimulator()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-mono text-emerald-400 border border-slate-700 transition flex items-center gap-2">
+            <i class="ph-bold ph-receipt"></i> Inspect M-Pesa Receipt
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 font-mono text-xs">
+          <!-- Receipt Card 1 -->
+          <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800 space-y-2">
+            <div class="flex justify-between items-center text-slate-400">
+              <span>Ref: QKH92048X1</span>
+              <span class="text-emerald-400 font-bold">COMPLETED</span>
+            </div>
+            <div class="text-lg font-bold text-white">KSh 3,450.00</div>
+            <p class="text-slate-400">Paid to 254712***891 (M-Pesa B2C)</p>
+            <p class="text-slate-500 text-[10px]">Till 7968544 Verification Completed</p>
+          </div>
+
+          <!-- Receipt Card 2 -->
+          <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800 space-y-2">
+            <div class="flex justify-between items-center text-slate-400">
+              <span>Ref: QKH92811A9</span>
+              <span class="text-emerald-400 font-bold">COMPLETED</span>
+            </div>
+            <div class="text-lg font-bold text-white">KSh 12,800.00</div>
+            <p class="text-slate-400">Paid to 254790***304 (M-Pesa B2C)</p>
+            <p class="text-slate-500 text-[10px]">Till 7968544 Verification Completed</p>
+          </div>
+
+          <!-- Receipt Card 3 -->
+          <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800 space-y-2">
+            <div class="flex justify-between items-center text-slate-400">
+              <span>Ref: QKH93102C4</span>
+              <span class="text-emerald-400 font-bold">COMPLETED</span>
+            </div>
+            <div class="text-lg font-bold text-white">KSh 5,200.00</div>
+            <p class="text-slate-400">Paid to 254722***012 (M-Pesa B2C)</p>
+            <p class="text-slate-500 text-[10px]">Till 7968544 Verification Completed</p>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ========================================== -->
+    <!-- VIEW 2: INTERACTIVE LIVE CHAT SANDBOX     -->
+    <!-- ========================================== -->
+    <section id="view-chat" class="view-section hidden space-y-6">
+      
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-slate-900/60 p-4 rounded-2xl border border-slate-800">
+        <div>
+          <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+            Interactive Chat Sandbox
+            <span class="px-2 py-0.5 rounded-full text-xs font-mono bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Live Simulator</span>
+          </h2>
+          <p class="text-slate-400 text-sm">Experience replying to clients and watching your live wallet balance grow.</p>
+        </div>
+
+        <!-- Live Balance Widget -->
+        <div class="flex items-center gap-4 bg-slate-950 p-3 rounded-xl border border-slate-800 w-full md:w-auto justify-between">
+          <div>
+            <div class="text-slate-400 text-xs font-mono">Current Session Balance</div>
+            <div id="chat-balance" class="text-2xl font-extrabold text-emerald-400 font-mono">KSh 0.00</div>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="toggleAudio()" id="audio-btn" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs flex items-center gap-1" title="Toggle Sound">
+              <i id="audio-icon" class="ph-bold ph-speaker-high text-emerald-400"></i> Sound
+            </button>
+            <a href="#activation" class="px-3 py-2 rounded-lg bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold text-xs flex items-center gap-1">
+              Withdraw
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chat Interface -->
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 h-[600px]">
+        
+        <!-- Client Sidebar -->
+        <div class="glass-card rounded-2xl p-4 flex flex-col justify-between hidden lg:flex">
+          <div class="space-y-4">
+            <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider font-mono">Active Client</h3>
+            <div id="active-client-card" class="p-3 rounded-xl bg-slate-900 border border-brand-500/40 space-y-2">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-lg">🇺🇸</div>
+                <div>
+                  <h4 class="font-bold text-white text-sm" id="client-name">Sarah Jenkins</h4>
+                  <span class="text-xs text-emerald-400 flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Online
+                  </span>
+                </div>
+              </div>
+              <div class="text-xs text-slate-400 font-mono pt-2 border-t border-slate-800 space-y-1">
+                <div>Rate: <strong class="text-emerald-400" id="client-rate">KSh 150 / msg</strong></div>
+                <div>Location: <span class="text-slate-300">New York, USA</span></div>
+                <div>Topic: <span class="text-slate-300">Customer Technical Help</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-3 rounded-xl bg-emerald-950/30 border border-emerald-800/40 text-xs text-emerald-300 space-y-1">
+            <div class="font-bold">Pro Tip:</div>
+            <p class="text-slate-300">Type a response or click a quick reply chip below to instantly earn KSh 150 per message!</p>
+          </div>
+        </div>
+
+        <!-- Main Chat Box -->
+        <div class="lg:col-span-3 glass-card rounded-2xl flex flex-col h-full overflow-hidden border border-slate-800">
+          
+          <!-- Chat Header -->
+          <div class="p-4 bg-slate-900/80 border-b border-slate-800 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-3 h-3 rounded-full bg-emerald-500 animate-ping"></div>
+              <span class="font-bold text-white text-sm" id="chat-header-title">Sarah Jenkins (USA)</span>
+            </div>
+            <button onclick="resetChatSandbox()" class="text-xs text-slate-400 hover:text-white flex items-center gap-1 font-mono">
+              <i class="ph-bold ph-arrows-counter-clockwise"></i> Reset Chat
+            </button>
+          </div>
+
+          <!-- Messages Stream -->
+          <div id="chat-messages" class="flex-grow p-4 overflow-y-auto space-y-4">
+            <!-- Messages rendered dynamically via JS -->
+          </div>
+
+          <!-- Typing Indicator -->
+          <div id="typing-indicator" class="px-4 py-1 text-xs text-slate-400 italic hidden flex items-center gap-2">
+            <i class="ph-bold ph-dots-three-circle text-emerald-400 animate-bounce"></i> Sarah is typing a response...
+          </div>
+
+          <!-- Quick Reply Chips & Input -->
+          <div class="p-4 bg-slate-900/90 border-t border-slate-800 space-y-3">
+            <div id="quick-chips" class="flex items-center gap-2 overflow-x-auto pb-1 text-xs">
+              <!-- Chips injected JS -->
+            </div>
+
+            <form id="chat-form" onsubmit="handleUserChatSubmit(event)" class="flex gap-2">
+              <input type="text" id="chat-input" placeholder="Type your response to client..." class="flex-grow px-4 py-3 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-brand-500 text-sm" />
+              <button type="submit" class="px-6 py-3 rounded-xl bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold text-sm flex items-center gap-2 transition shrink-0">
+                <span>Send</span>
+                <i class="ph-bold ph-paper-plane-right"></i>
+              </button>
+            </form>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ========================================== -->
+    <!-- VIEW 3: DYNAMIC EARNINGS CALCULATOR        -->
+    <!-- ========================================== -->
+    <section id="view-calculator" class="view-section hidden space-y-8">
+      
+      <div class="text-center max-w-2xl mx-auto space-y-2">
+        <h2 class="text-3xl font-bold text-white">Earnings Calculator</h2>
+        <p class="text-slate-400 text-sm">Estimate your daily, weekly, and monthly M-Pesa payouts based on chat velocity.</p>
+      </div>
+
+      <div class="glass-card max-w-3xl mx-auto p-6 sm:p-8 rounded-3xl space-y-8 border border-slate-800">
+        
+        <!-- Slider 1: Hours per day -->
+        <div class="space-y-3">
+          <div class="flex justify-between items-center text-sm">
+            <label for="hours-slider" class="text-slate-300 font-medium">Hours Spent Chatting Per Day:</label>
+            <span id="hours-val" class="font-bold font-mono text-emerald-400 text-lg">4 Hours</span>
+          </div>
+          <input type="range" id="hours-slider" min="1" max="12" value="4" oninput="updateCalculator()" class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-500" />
+        </div>
+
+        <!-- Slider 2: Messages per hour -->
+        <div class="space-y-3">
+          <div class="flex justify-between items-center text-sm">
+            <label for="msg-slider" class="text-slate-300 font-medium">Messages Handled Per Hour:</label>
+            <span id="msg-val" class="font-bold font-mono text-emerald-400 text-lg">20 Messages</span>
+          </div>
+          <input type="range" id="msg-slider" min="5" max="60" value="20" oninput="updateCalculator()" class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-500" />
+        </div>
+
+        <!-- Calculated Output Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-slate-800 font-mono">
+          
+          <div class="bg-slate-900/90 p-4 rounded-2xl border border-slate-800 text-center space-y-1">
+            <span class="text-slate-400 text-xs">Daily Projection</span>
+            <div id="calc-daily" class="text-xl sm:text-2xl font-extrabold text-white">KSh 12,000</div>
+          </div>
+
+          <div class="bg-slate-900/90 p-4 rounded-2xl border border-emerald-500/30 text-center space-y-1 bg-emerald-950/10">
+            <span class="text-emerald-400 text-xs font-semibold">Weekly Projection</span>
+            <div id="calc-weekly" class="text-xl sm:text-2xl font-extrabold text-emerald-400">KSh 84,000</div>
+          </div>
+
+          <div class="bg-slate-900/90 p-4 rounded-2xl border border-slate-800 text-center space-y-1">
+            <span class="text-slate-400 text-xs">Monthly Projection</span>
+            <div id="calc-monthly" class="text-xl sm:text-2xl font-extrabold text-white">KSh 360,000</div>
+          </div>
+
+        </div>
+
+        <div class="text-center pt-2">
+          <a href="#activation" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-brand-500 to-emerald-600 text-slate-950 font-bold text-sm shadow-lg shadow-brand-500/20 hover:scale-105 transition">
+            Start Earning This Potential <i class="ph-bold ph-arrow-right"></i>
+          </a>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ========================================== -->
+    <!-- VIEW 4: ACTIVE GLOBAL MARKETPLACE          -->
+    <!-- ========================================== -->
+    <section id="view-marketplace" class="view-section hidden space-y-6">
+      
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+          <h2 class="text-3xl font-bold text-white">Global Client Marketplace</h2>
+          <p class="text-slate-400 text-sm">Select an active client room to start generating responses.</p>
+        </div>
+
+        <!-- Filter Controls -->
+        <div class="flex flex-wrap gap-2">
+          <button onclick="filterMarketplace('ALL')" class="market-filter-btn active-filter px-3 py-1.5 rounded-lg bg-brand-500 text-slate-950 font-semibold text-xs">All Regions</button>
+          <button onclick="filterMarketplace('USA')" class="market-filter-btn px-3 py-1.5 rounded-lg bg-slate-900 text-slate-300 hover:bg-slate-800 font-semibold text-xs border border-slate-800">🇺🇸 USA</button>
+          <button onclick="filterMarketplace('UK')" class="market-filter-btn px-3 py-1.5 rounded-lg bg-slate-900 text-slate-300 hover:bg-slate-800 font-semibold text-xs border border-slate-800">🇬🇧 UK</button>
+          <button onclick="filterMarketplace('EU')" class="market-filter-btn px-3 py-1.5 rounded-lg bg-slate-900 text-slate-300 hover:bg-slate-800 font-semibold text-xs border border-slate-800">🇪🇺 EU</button>
+        </div>
+      </div>
+
+      <!-- Clients Grid -->
+      <div id="marketplace-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Marketplace Cards Rendered Dynamic via JS -->
+      </div>
+
+    </section>
+
+    <!-- ========================================== -->
+    <!-- VIEW 5: M-PESA STK PUSH ACTIVATION PAYWALL -->
+    <!-- ========================================== -->
+    <section id="view-activation" class="view-section hidden space-y-8">
+      
+      <div class="text-center max-w-2xl mx-auto space-y-2">
+        <span class="px-3 py-1 rounded-full text-xs font-mono bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Official Daraja M-Pesa Gateway</span>
+        <h2 class="text-3xl font-bold text-white">Activate Verora Agent Portal</h2>
+        <p class="text-slate-400 text-sm">Unlock unlimited client messages & instant automated M-Pesa withdrawals via Safaricom Till Number <strong class="text-emerald-400 font-mono">7968544</strong>.</p>
+      </div>
+
+      <div class="glass-card max-w-xl mx-auto p-6 sm:p-8 rounded-3xl border border-slate-800 space-y-6">
+        
+        <!-- M-Pesa Header Info Box -->
+        <div class="bg-emerald-950/40 p-4 rounded-2xl border border-emerald-800/60 flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-emerald-500 text-slate-950 font-bold flex items-center justify-center text-xl shrink-0">
+            M
+          </div>
+          <div>
+            <div class="text-xs text-emerald-400 font-mono font-semibold">BUY GOODS TILL NUMBER</div>
+            <div class="text-2xl font-black text-white font-mono tracking-wider">7968544</div>
+            <div class="text-[11px] text-slate-300">Account Name: <strong class="text-white">Verora Chat Global</strong></div>
+          </div>
+        </div>
+
+        <!-- Preset Activation Tier Selection -->
+        <div class="space-y-3">
+          <label class="text-xs font-mono text-slate-400 uppercase tracking-wider block">Select Activation Deposit Tier:</label>
+          <div class="grid grid-cols-3 gap-3">
+            <button onclick="selectTier(150)" id="tier-150" class="tier-btn active-tier p-3 rounded-xl border text-center font-mono space-y-1 transition bg-brand-500/10 border-brand-500 text-white">
+              <div class="text-xs text-slate-400">Basic Tier</div>
+              <div class="text-lg font-bold text-emerald-400">KSh 150</div>
+            </button>
+            <button onclick="selectTier(250)" id="tier-250" class="tier-btn p-3 rounded-xl border text-center font-mono space-y-1 transition bg-slate-900 border-slate-800 text-slate-300 hover:border-slate-700">
+              <div class="text-xs text-slate-400">Pro Tier</div>
+              <div class="text-lg font-bold">KSh 250</div>
+            </button>
+            <button onclick="selectTier(500)" id="tier-500" class="tier-btn p-3 rounded-xl border text-center font-mono space-y-1 transition bg-slate-900 border-slate-800 text-slate-300 hover:border-slate-700">
+              <div class="text-xs text-slate-400">VIP Unlimited</div>
+              <div class="text-lg font-bold">KSh 500</div>
+            </button>
+          </div>
+        </div>
+
+        <!-- STK Push Form -->
+        <form onsubmit="initiateSTKPush(event)" class="space-y-4">
+          
+          <div class="space-y-2">
+            <label for="mpesa-phone" class="text-sm font-medium text-slate-300 block">Safaricom Phone Number:</label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500 font-mono text-sm">
+                +254
+              </div>
+              <input type="tel" id="mpesa-phone" required placeholder="712345678" pattern="^(?:254|\+254|0)?(7[0-9]{8}|1[0-9]{8})$" class="w-full pl-16 pr-4 py-3.5 rounded-xl bg-slate-950 border border-slate-700 text-white font-mono placeholder-slate-600 focus:outline-none focus:border-brand-500 text-sm" />
+            </div>
+            <p class="text-[11px] text-slate-500">Format: 0712345678 or 0790123456</p>
+          </div>
+
+          <!-- STK Trigger Button -->
+          <button type="submit" id="stk-btn" class="w-full py-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-slate-950 font-bold text-base shadow-xl shadow-emerald-500/20 transition flex items-center justify-center gap-2">
+            <i class="ph-bold ph-device-mobile-camera text-xl"></i> Send M-Pesa STK Push
+          </button>
+
+        </form>
+
+        <div class="text-center pt-2 text-xs text-slate-500 space-y-1">
+          <p>🔒 Instant automatic verification via Safaricom Daraja API C2B/B2C callbacks.</p>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ========================================== -->
+    <!-- VIEW 6: DARAJA API DEV SANDBOX & CONFIG    -->
+    <!-- ========================================== -->
+    <section id="view-api-config" class="view-section hidden space-y-8">
+      
+      <div class="text-center max-w-2xl mx-auto space-y-2">
+        <span class="px-3 py-1 rounded-full text-xs font-mono bg-cyan-500/20 text-cyan-400 border border-cyan-500/30">Developer Hub</span>
+        <h2 class="text-3xl font-bold text-white">Daraja API Integration & Server Code</h2>
+        <p class="text-slate-400 text-sm">Inspect live STK Push payloads or copy ready-to-deploy Node.js Express server code for Vercel/Render.</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        
+        <!-- Interactive STK Push Request Tester -->
+        <div class="glass-card p-6 rounded-3xl border border-slate-800 space-y-4">
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="ph-bold ph-terminal-window text-emerald-400"></i> Live STK Log Stream Simulator
+          </h3>
+
+          <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 font-mono text-xs text-slate-300 h-80 overflow-y-auto space-y-2" id="api-log-stream">
+            <div class="text-slate-500">// Waiting for STK Push request initiation...</div>
+          </div>
+
+          <button onclick="simulateApiLogStream()" class="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-cyan-400 border border-slate-700 font-mono text-xs transition">
+            ▶ Run Test STK Payload Simulation
+          </button>
+        </div>
+
+        <!-- Copyable Node.js Server Code Snippet -->
+        <div class="glass-card p-6 rounded-3xl border border-slate-800 space-y-4">
+          <div class="flex justify-between items-center">
+            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+              <i class="ph-bold ph-code text-cyan-400"></i> Serverless Node.js Backend (`server.js`)
+            </h3>
+            <button onclick="copyServerCode()" class="px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-mono text-emerald-400 border border-slate-700 transition">
+              Copy Code
+            </button>
+          </div>
+
+          <pre class="bg-slate-950 p-4 rounded-2xl border border-slate-800 font-mono text-[11px] text-slate-300 h-80 overflow-y-auto leading-relaxed"><code>// Node.js Express Backend for Safaricom Daraja STK Push
+// Deployable to Vercel Serverless or Render Web Service
+
+const express = require('express');
+const axios = require('axios');
+const app = express();
+app.use(express.json());
+
+const CONSUMER_KEY = process.env.DARAJA_CONSUMER_KEY;
+const CONSUMER_SECRET = process.env.DARAJA_CONSUMER_SECRET;
+const PASSKEY = process.env.DARAJA_PASSKEY;
+const TILL_NUMBER = "7968544"; // Buy Goods Till Number
+
+// OAuth Token Generation
+async function getAccessToken() {
+  const auth = Buffer.from(`${CONSUMER_KEY}:${CONSUMER_SECRET}`).toString('base64');
+  const res = await axios.get('https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials', {
+    headers: { Authorization: `Basic ${auth}` }
+  });
+  return res.data.access_token;
+}
+
+// STK Push Request Route
+app.post('/api/stkpush', async (req, res) => {
+  try {
+    const { phone, amount } = req.body;
+    const token = await getAccessToken();
+    const timestamp = new Date().toISOString().replace(/[^0-9]/g, '').slice(0, 14);
+    const password = Buffer.from(`${TILL_NUMBER}${PASSKEY}${timestamp}`).toString('base64');
+
+    const payload = {
+      BusinessShortCode: TILL_NUMBER,
+      Password: password,
+      Timestamp: timestamp,
+      TransactionType: "CustomerBuyGoodsOnline",
+      Amount: amount || 150,
+      PartyA: phone,
+      PartyB: TILL_NUMBER,
+      PhoneNumber: phone,
+      CallBackURL: "https://your-domain.vercel.app/api/callback",
+      AccountReference: "VeroraChat",
+      TransactionDesc: "Activation Deposit"
+    };
+
+    const response = await axios.post('https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest', payload, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    res.json(response.data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.listen(3000, () => console.log('Verora Server running on port 3000'));</code></pre>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ========================================== -->
+    <!-- VIEW 7: HOSTING DEPLOYMENT GUIDE          -->
+    <!-- ========================================== -->
+    <section id="view-deploy-guide" class="view-section hidden space-y-8">
+      
+      <div class="text-center max-w-2xl mx-auto space-y-2">
+        <span class="px-3 py-1 rounded-full text-xs font-mono bg-purple-500/20 text-purple-400 border border-purple-500/30">Zero-Config Deployment</span>
+        <h2 class="text-3xl font-bold text-white">How to Host on Vercel, Render & Netlify</h2>
+        <p class="text-slate-400 text-sm">Publish this web app in under 2 minutes for free on popular static hosting platforms.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <!-- Vercel Guide -->
+        <div class="glass-card p-6 rounded-3xl border border-slate-800 space-y-4">
+          <div class="w-10 h-10 rounded-xl bg-slate-900 border border-slate-700 flex items-center justify-center text-white text-lg font-bold">
+            ▲
+          </div>
+          <h3 class="text-xl font-bold text-white">Vercel Deployment</h3>
+          <ol class="text-xs text-slate-300 space-y-2 list-decimal list-inside leading-relaxed">
+            <li>Create a new repository on GitHub named <code class="bg-slate-900 px-1 py-0.5 rounded text-emerald-400">verorachat</code>.</li>
+            <li>Upload this <code class="bg-slate-900 px-1 py-0.5 rounded text-emerald-400">index.html</code> file directly.</li>
+            <li>Log into <strong>Vercel.com</strong> and click <strong>Add New Project</strong>.</li>
+            <li>Import the GitHub repo and click <strong>Deploy</strong> (No build command needed).</li>
+          </ol>
+        </div>
+
+        <!-- Netlify Guide -->
+        <div class="glass-card p-6 rounded-3xl border border-slate-800 space-y-4">
+          <div class="w-10 h-10 rounded-xl bg-slate-900 border border-slate-700 flex items-center justify-center text-teal-400 text-lg font-bold">
+            🌐
+          </div>
+          <h3 class="text-xl font-bold text-white">Netlify Deployment</h3>
+          <ol class="text-xs text-slate-300 space-y-2 list-decimal list-inside leading-relaxed">
+            <li>Log into <strong>Netlify.com</strong>.</li>
+            <li>Go to <strong>Sites</strong> tab and scroll to <strong>Drag and Drop</strong> section.</li>
+            <li>Drag a folder containing this <code class="bg-slate-900 px-1 py-0.5 rounded text-emerald-400">index.html</code> file.</li>
+            <li>Your site goes live instantly with SSL enabled!</li>
+          </ol>
+        </div>
+
+        <!-- Render Guide -->
+        <div class="glass-card p-6 rounded-3xl border border-slate-800 space-y-4">
+          <div class="w-10 h-10 rounded-xl bg-slate-900 border border-slate-700 flex items-center justify-center text-cyan-400 text-lg font-bold">
+            ⚡
+          </div>
+          <h3 class="text-xl font-bold text-white">Render Static Site</h3>
+          <ol class="text-xs text-slate-300 space-y-2 list-decimal list-inside leading-relaxed">
+            <li>Log into <strong>Render.com</strong> dashboard.</li>
+            <li>Click <strong>New +</strong> and select <strong>Static Site</strong>.</li>
+            <li>Connect your GitHub repository containing <code class="bg-slate-900 px-1 py-0.5 rounded text-emerald-400">index.html</code>.</li>
+            <li>Leave Publish Directory as <code class="bg-slate-900 px-1 py-0.5 rounded text-emerald-400">./</code> and click Deploy.</li>
+          </ol>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800 bg-slate-950 py-8 text-xs text-slate-500 font-mono">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div>
+        © 2026 VeroraChat Platform. Safaricom Daraja Partner Till: <strong class="text-emerald-400">7968544</strong>.
+      </div>
+      <div class="flex gap-4">
+        <a href="#home" class="hover:text-slate-300">Home</a>
+        <a href="#chat" class="hover:text-slate-300">Sandbox</a>
+        <a href="#activation" class="hover:text-slate-300">Activation</a>
+        <a href="#api-config" class="hover:text-slate-300">API Logs</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================== -->
+  <!-- MODAL 1: STK PUSH COUNTDOWN MODAL         -->
+  <!-- ========================================== -->
+  <div id="stk-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="glass-card max-w-md w-full p-6 rounded-3xl border border-emerald-500/40 text-center space-y-6 animate-glow">
+      <div class="w-16 h-16 bg-emerald-500/10 text-emerald-400 rounded-full flex items-center justify-center mx-auto text-3xl">
+        <i class="ph-bold ph-phone-call animate-bounce"></i>
+      </div>
+
+      <div class="space-y-2">
+        <h3 class="text-xl font-bold text-white">Check Your Phone</h3>
+        <p class="text-xs text-slate-300 leading-relaxed">
+          An M-Pesa STK Push prompt has been sent to <strong id="modal-phone-num" class="text-emerald-400 font-mono">2547XXXXXXXX</strong> for <strong id="modal-amount" class="text-white font-mono">KSh 150</strong> (Buy Goods Till 7968544).
+        </p>
+      </div>
+
+      <!-- Countdown Timer -->
+      <div class="py-2">
+        <div class="text-xs text-slate-400 font-mono">Waiting for PIN entry...</div>
+        <div id="stk-countdown" class="text-4xl font-extrabold text-emerald-400 font-mono tracking-wider">30s</div>
+      </div>
+
+      <div class="flex gap-3">
+        <button onclick="closeStkModal()" class="w-full py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold">
+          Cancel Prompt
+        </button>
+        <button onclick="simulateSuccessfulPayment()" class="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 text-xs font-bold">
+          Simulate Success
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL 2: M-PESA RECEIPT PREVIEW MODAL      -->
+  <!-- ========================================== -->
+  <div id="receipt-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="glass-card max-w-sm w-full p-6 rounded-3xl border border-slate-700 text-left space-y-4 font-mono text-xs">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+        <span class="font-bold text-emerald-400 text-sm">SAFARICOM M-PESA</span>
+        <button onclick="closeReceiptModal()" class="text-slate-400 hover:text-white"><i class="ph-bold ph-x text-lg"></i></button>
+      </div>
+
+      <div class="space-y-2 text-slate-300">
+        <div><strong class="text-slate-400">Receipt No:</strong> QKH92048X1</div>
+        <div><strong class="text-slate-400">Status:</strong> <span class="text-emerald-400 font-bold">CONFIRMED</span></div>
+        <div><strong class="text-slate-400">Amount:</strong> KSh 150.00</div>
+        <div><strong class="text-slate-400">Paid To:</strong> VeroraChat Till 7968544</div>
+        <div><strong class="text-slate-400">Date/Time:</strong> 18/10/2026 13:12:00</div>
+      </div>
+
+      <button onclick="closeReceiptModal()" class="w-full py-2.5 rounded-xl bg-brand-500 text-slate-950 font-bold text-xs mt-2">
+        Close Inspection
+      </button>
+    </div>
+  </div>
+
+
+  <!-- ========================================== -->
+  <!-- JAVASCRIPT APP ENGINE                      -->
+  <!-- ========================================== -->
+  <script>
+    // App State Management
+    const state = {
+      currency: 'KES', // KES or USD
+      exchangeRate: 130, // 1 USD = 130 KES
+      sessionBalanceKES: 0,
+      soundEnabled: true,
+      selectedTierAmount: 150,
+      activeClientIndex: 0,
+      stkTimerInterval: null
+    };
+
+    // Client Marketplace Mock Data
+    const clientsData = [
+      { id: 1, name: 'Sarah Jenkins', region: 'USA', flag: '🇺🇸', location: 'New York, USA', rateKES: 150, topic: 'Tech Support', prompt: 'Hello! I am having trouble configuring my wireless router setup. Can you guide me?' },
+      { id: 2, name: 'Oliver Smith', region: 'UK', flag: '🇬🇧', location: 'London, UK', rateKES: 200, topic: 'Order Logistics', prompt: 'Hi there, where can I track my international express package shipment status?' },
+      { id: 3, name: 'Emma Webber', region: 'EU', flag: '🇪🇺', location: 'Berlin, Germany', rateKES: 180, topic: 'Billing Inquiry', prompt: 'Good day! I need assistance updating my recurring payment billing details.' },
+      { id: 4, name: 'David Miller', region: 'USA', flag: '🇺🇸', location: 'Texas, USA', rateKES: 250, topic: 'VIP Priority', prompt: 'Can you verify if my enterprise subscription has been successfully upgraded?' },
+      { id: 5, name: 'Chloe Taylor', region: 'AU', flag: '🇦🇺', location: 'Sydney, Australia', rateKES: 220, topic: 'Product Guide', prompt: 'Hey! Which subscription plan is best suited for a team of 5 members?' },
+      { id: 6, name: 'Lucas Martin', region: 'EU', flag: '🇪🇺', location: 'Paris, France', rateKES: 160, topic: 'Account Help', prompt: 'Bonjour, I forgot my account recovery password. How do I reset it?' }
+    ];
+
+    // Web Audio API Sound Generator
+    function playSound(type) {
+      if (!state.soundEnabled) return;
+      try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        if (type === 'message') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
+          osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.15); // A5
+          gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.15);
+        } else if (type === 'cash') {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(987.77, audioCtx.currentTime); // B5
+          osc.frequency.exponentialRampToValueAtTime(1318.51, audioCtx.currentTime + 0.25); // E6
+          gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.25);
+        }
+      } catch (e) {
+        console.warn('Audio Context error', e);
+      }
+    }
+
+    function toggleAudio() {
+      state.soundEnabled = !state.soundEnabled;
+      const btn = document.getElementById('audio-btn');
+      const icon = document.getElementById('audio-icon');
+      if (state.soundEnabled) {
+        icon.className = 'ph-bold ph-speaker-high text-emerald-400';
+        showToast('🔊 Audio sound effects enabled');
+      } else {
+        icon.className = 'ph-bold ph-speaker-slash text-slate-500';
+        showToast('🔇 Audio muted');
+      }
+    }
+
+    // SPA Hash Router Engine
+    function routeEngine() {
+      const hash = window.location.hash || '#home';
+      const cleanRoute = hash.replace('#', '');
+      
+      // Hide all view sections
+      document.querySelectorAll('.view-section').forEach(sec => sec.classList.add('hidden'));
+
+      // Show targeted view
+      const activeSection = document.getElementById(`view-${cleanRoute}`);
+      if (activeSection) {
+        activeSection.classList.remove('hidden');
+      } else {
+        document.getElementById('view-home').classList.remove('hidden');
+      }
+
+      // Update Nav highlighting
+      document.querySelectorAll('.nav-link').forEach(link => {
+        if (link.getAttribute('data-route') === cleanRoute) {
+          link.classList.add('text-white', 'bg-slate-800/80');
+          link.classList.remove('text-slate-300');
+        } else {
+          link.classList.remove('text-white', 'bg-slate-800/80');
+          link.classList.add('text-slate-300');
+        }
+      });
+
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    window.addEventListener('hashchange', routeEngine);
+    window.addEventListener('load', () => {
+      routeEngine();
+      renderMarketplace();
+      initChatSandbox();
+      updateCalculator();
+    });
+
+    // Mobile Navigation Toggle
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      menu.classList.toggle('hidden');
+    }
+
+    // Currency Switcher
+    function toggleCurrency() {
+      state.currency = state.currency === 'KES' ? 'USD' : 'KES';
+      document.getElementById('currency-label').textContent = state.currency === 'KES' ? 'KSh (KES)' : '$ (USD)';
+      updateBalanceDisplay();
+      updateCalculator();
+      showToast(`Switched currency view to ${state.currency}`);
+    }
+
+    function updateBalanceDisplay() {
+      const el = document.getElementById('chat-balance');
+      if (state.currency === 'KES') {
+        el.textContent = `KSh ${state.sessionBalanceKES.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+      } else {
+        const usd = state.sessionBalanceKES / state.exchangeRate;
+        el.textContent = `$ ${usd.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+      }
+    }
+
+    // Toast Notification System
+    function showToast(msg, type = 'info') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `p-3 rounded-xl glass-card text-xs font-mono text-white border border-slate-700 shadow-xl flex items-center justify-between pointer-events-auto transition-all transform translate-y-2 opacity-0`;
+      toast.innerHTML = `
+        <span>${msg}</span>
+        <i class="ph-bold ph-check-circle text-emerald-400 text-base"></i>
+      `;
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.classList.remove('translate-y-2', 'opacity-0');
+      }, 10);
+
+      setTimeout(() => {
+        toast.classList.add('opacity-0', '-translate-y-2');
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    // ==========================================
+    // CHAT SANDBOX ENGINE
+    // ==========================================
+    function initChatSandbox() {
+      const client = clientsData[state.activeClientIndex];
+      document.getElementById('client-name').textContent = client.name;
+      document.getElementById('client-rate').textContent = `KSh ${client.rateKES} / msg`;
+      document.getElementById('chat-header-title').textContent = `${client.name} (${client.region})`;
+
+      const messagesContainer = document.getElementById('chat-messages');
+      messagesContainer.innerHTML = `
+        <div class="flex items-start gap-3">
+          <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-sm shrink-0">${client.flag}</div>
+          <div class="bg-slate-900 border border-slate-800 p-3.5 rounded-2xl rounded-tl-none max-w-md text-xs text-slate-200 space-y-1">
+            <div class="font-bold text-slate-400 text-[10px]">${client.name}</div>
+            <p>${client.prompt}</p>
+            <div class="text-[9px] text-slate-500 text-right">Just now</div>
+          </div>
+        </div>
+      `;
+
+      renderQuickChips();
+    }
+
+    function renderQuickChips() {
+      const container = document.getElementById('quick-chips');
+      const chips = [
+        "Yes, I can certainly assist you with that right now!",
+        "Could you please share your reference ID?",
+        "I've updated your configuration settings."
+      ];
+      container.innerHTML = chips.map(chip => `
+        <button onclick="useQuickChip('${chip}')" class="px-3 py-1.5 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 whitespace-nowrap shrink-0 transition">
+          ${chip}
+        </button>
+      `).join('');
+    }
+
+    function useQuickChip(text) {
+      document.getElementById('chat-input').value = text;
+    }
+
+    function handleUserChatSubmit(e) {
+      e.preventDefault();
+      const input = document.getElementById('chat-input');
+      const val = input.value.trim();
+      if (!val) return;
+
+      const client = clientsData[state.activeClientIndex];
+      const messagesContainer = document.getElementById('chat-messages');
+
+      // Append User Message
+      messagesContainer.innerHTML += `
+        <div class="flex items-end justify-end gap-3">
+          <div class="bg-brand-600 text-slate-950 font-medium p-3.5 rounded-2xl rounded-tr-none max-w-md text-xs space-y-1">
+            <p>${val}</p>
+            <div class="text-[9px] text-emerald-950 text-right font-mono">+KSh ${client.rateKES} Earned</div>
+          </div>
+        </div>
+      `;
+
+      input.value = '';
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+      // Update Session Balance
+      state.sessionBalanceKES += client.rateKES;
+      updateBalanceDisplay();
+      playSound('cash');
+      showToast(`+KSh ${client.rateKES} Credited to Session Balance!`);
+
+      // Trigger Simulated Client Response
+      document.getElementById('typing-indicator').classList.remove('hidden');
+      setTimeout(() => {
+        document.getElementById('typing-indicator').classList.add('hidden');
+        playSound('message');
+
+        const replies = [
+          "Thank you! That resolved my query perfectly.",
+          "Awesome work, I really appreciate the fast support!",
+          "Great service! Sending a positive rating now."
+        ];
+        const randomReply = replies[Math.floor(Math.random() * replies.length)];
+
+        messagesContainer.innerHTML += `
+          <div class="flex items-start gap-3">
+            <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-sm shrink-0">${client.flag}</div>
+            <div class="bg-slate-900 border border-slate-800 p-3.5 rounded-2xl rounded-tl-none max-w-md text-xs text-slate-200 space-y-1">
+              <div class="font-bold text-slate-400 text-[10px]">${client.name}</div>
+              <p>${randomReply}</p>
+              <div class="text-[9px] text-slate-500 text-right">Just now</div>
+            </div>
+          </div>
+        `;
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }, 1500);
+    }
+
+    function resetChatSandbox() {
+      state.sessionBalanceKES = 0;
+      updateBalanceDisplay();
+      initChatSandbox();
+      showToast('Chat session reset');
+    }
+
+    // ==========================================
+    // CALCULATOR ENGINE
+    // ==========================================
+    function updateCalculator() {
+      const hours = parseInt(document.getElementById('hours-slider').value);
+      const msgs = parseInt(document.getElementById('msg-slider').value);
+
+      document.getElementById('hours-val').textContent = `${hours} Hours`;
+      document.getElementById('msg-val').textContent = `${msgs} Messages`;
+
+      const avgRateKES = 150;
+      const dailyKES = hours * msgs * avgRateKES;
+      const weeklyKES = dailyKES * 7;
+      const monthlyKES = dailyKES * 30;
+
+      if (state.currency === 'KES') {
+        document.getElementById('calc-daily').textContent = `KSh ${dailyKES.toLocaleString()}`;
+        document.getElementById('calc-weekly').textContent = `KSh ${weeklyKES.toLocaleString()}`;
+        document.getElementById('calc-monthly').textContent = `KSh ${monthlyKES.toLocaleString()}`;
+      } else {
+        document.getElementById('calc-daily').textContent = `$ ${(dailyKES / state.exchangeRate).toFixed(0)}`;
+        document.getElementById('calc-weekly').textContent = `$ ${(weeklyKES / state.exchangeRate).toFixed(0)}`;
+        document.getElementById('calc-monthly').textContent = `$ ${(monthlyKES / state.exchangeRate).toFixed(0)}`;
+      }
+    }
+
+    // ==========================================
+    // MARKETPLACE ENGINE
+    // ==========================================
+    function renderMarketplace(filter = 'ALL') {
+      const grid = document.getElementById('marketplace-grid');
+      const filtered = filter === 'ALL' ? clientsData : clientsData.filter(c => c.region === filter);
+
+      grid.innerHTML = filtered.map((client, index) => `
+        <div class="glass-card p-5 rounded-2xl border border-slate-800 space-y-4 hover:border-brand-500/40 transition">
+          <div class="flex justify-between items-start">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center text-xl">${client.flag}</div>
+              <div>
+                <h4 class="font-bold text-white text-sm">${client.name}</h4>
+                <p class="text-xs text-slate-400">${client.location}</p>
+              </div>
+            </div>
+            <span class="px-2.5 py-1 rounded-full text-xs font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+              KSh ${client.rateKES}/msg
+            </span>
+          </div>
+
+          <div class="text-xs text-slate-300 bg-slate-950/60 p-3 rounded-xl border border-slate-800/80">
+            <strong class="text-slate-400 block mb-1">Topic: ${client.topic}</strong>
+            <p class="italic text-slate-400">"${client.prompt}"</p>
+          </div>
+
+          <button onclick="startChatWithClient(${index})" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-brand-500 hover:text-slate-950 text-white font-bold text-xs transition flex items-center justify-center gap-2">
+            <i class="ph-bold ph-chat-circle"></i> Start Chat Session
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function filterMarketplace(region) {
+      document.querySelectorAll('.market-filter-btn').forEach(btn => {
+        btn.classList.remove('bg-brand-500', 'text-slate-950');
+        btn.classList.add('bg-slate-900', 'text-slate-300');
+      });
+      event.target.classList.add('bg-brand-500', 'text-slate-950');
+      renderMarketplace(region);
+    }
+
+    function startChatWithClient(index) {
+      state.activeClientIndex = index;
+      window.location.hash = '#chat';
+      initChatSandbox();
+    }
+
+    // ==========================================
+    // STK PUSH ACTIVATION PAYWALL
+    // ==========================================
+    function selectTier(amount) {
+      state.selectedTierAmount = amount;
+      document.querySelectorAll('.tier-btn').forEach(btn => {
+        btn.classList.remove('border-brand-500', 'bg-brand-500/10', 'text-white');
+        btn.classList.add('bg-slate-900', 'border-slate-800', 'text-slate-300');
+      });
+      const activeBtn = document.getElementById(`tier-${amount}`);
+      if (activeBtn) {
+        activeBtn.classList.add('border-brand-500', 'bg-brand-500/10', 'text-white');
+      }
+    }
+
+    function initiateSTKPush(e) {
+      e.preventDefault();
+      const phoneInput = document.getElementById('mpesa-phone').value;
+      const formattedPhone = phoneInput.startsWith('254') ? phoneInput : `254${phoneInput.replace(/^0/, '')}`;
+
+      document.getElementById('modal-phone-num').textContent = formattedPhone;
+      document.getElementById('modal-amount').textContent = `KSh ${state.selectedTierAmount}`;
+      document.getElementById('stk-modal').classList.remove('hidden');
+
+      let countdown = 30;
+      const timerEl = document.getElementById('stk-countdown');
+      timerEl.textContent = `${countdown}s`;
+
+      if (state.stkTimerInterval) clearInterval(state.stkTimerInterval);
+
+      state.stkTimerInterval = setInterval(() => {
+        countdown--;
+        timerEl.textContent = `${countdown}s`;
+        if (countdown <= 0) {
+          clearInterval(state.stkTimerInterval);
+          closeStkModal();
+          showToast('STK Push timed out. Please try again.', 'error');
+        }
+      }, 1000);
+    }
+
+    function closeStkModal() {
+      if (state.stkTimerInterval) clearInterval(state.stkTimerInterval);
+      document.getElementById('stk-modal').classList.add('hidden');
+    }
+
+    function simulateSuccessfulPayment() {
+      closeStkModal();
+      playSound('cash');
+      showToast('🎉 M-Pesa Payment Confirmed! Activation Bonus Credited.');
+      window.location.hash = '#chat';
+    }
+
+    // ==========================================
+    // DARAJA API SIMULATOR
+    // ==========================================
+    function simulateApiLogStream() {
+      const logStream = document.getElementById('api-log-stream');
+      const timestamp = new Date().toISOString();
+      
+      logStream.innerHTML += `<div class="text-emerald-400">[${timestamp}] POST /api/stkpush - Initiating...</div>`;
+      setTimeout(() => {
+        logStream.innerHTML += `<div class="text-cyan-400">[${timestamp}] OAuth Token Acquired: bearer_9048a1...</div>`;
+      }, 400);
+
+      setTimeout(() => {
+        logStream.innerHTML += `
+<pre class="text-slate-400 font-mono text-[10px]">
+{
+  "MerchantRequestID": "29182-90182-1",
+  "CheckoutRequestID": "ws_CO_181020261312001",
+  "ResponseCode": "0",
+  "ResponseDescription": "Success. Request accepted for processing",
+  "CustomerMessage": "Success. Request accepted for processing"
+}
+</pre>`;
+        logStream.scrollTop = logStream.scrollHeight;
+      }, 1000);
+    }
+
+    function copyServerCode() {
+      const code = `// Node.js Express Backend for Safaricom Daraja STK Push\nconst express = require('express');\nconst app = express();\n// ... Code available in sandbox interface ...`;
+      navigator.clipboard.writeText(code);
+      showToast('Server code copied to clipboard!');
+    }
+
+    // Receipt Modal controls
+    function showReceiptSimulator() {
+      document.getElementById('receipt-modal').classList.remove('hidden');
+    }
+    function closeReceiptModal() {
+      document.getElementById('receipt-modal').classList.add('hidden');
+    }
+  </script>
+
+</body>
+</html>
