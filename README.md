@@ -1,6 +1,6 @@
 # VeroraChat
 
-VeroraChat is a static HTML front-end prototype, deployable on Vercel without a framework build step.
+VeroraChat is a responsive static HTML front-end prototype. The root `index.html` is designed to deploy on Vercel without a framework build step.
 
 ## Deploy on Vercel
 
@@ -10,10 +10,22 @@ VeroraChat is a static HTML front-end prototype, deployable on Vercel without a 
 4. Leave **Build Command**, **Output Directory**, and **Install Command** empty.
 5. Deploy.
 
-The root `index.html` is the site entry point. Pushes to the connected production branch can trigger deployments automatically.
+## Included prototype screens
 
-## Account and payout prototype
+- Responsive landing page and signup/login interface.
+- Browser-local demo account profile and payout preferences.
+- Discovery page with sample conversation categories and illustrative profile cards.
+- Profile detail pages and an activation-checkout preview with example access-fee amounts.
+- Payout preference fields for M-Pesa, PayPal, crypto receiving addresses, and bank transfers.
 
-The interface includes signup/login screens, a profile dashboard, and fields for M-Pesa, PayPal, cryptocurrency public receiving addresses, and bank transfers. In this prototype, account records and payout preferences are stored in the current browser's local storage. They are not synchronized across devices and this is not production-grade authentication or secure payment-data storage. The password handling in this demo is not a substitute for server-side authentication.
+## Production readiness — important
 
-The form only saves a preferred payout destination; it does **not** initiate or verify payments. Real payouts require a backend, verified provider callbacks, appropriate compliance and fraud controls, and secrets kept server-side. Never request or store mobile money PINs, PayPal passwords, crypto private keys, or seed/recovery phrases.
+This is **not yet a production account or payments service**:
+
+- Demo accounts and profile/payout preferences use the current browser's local storage. They are not securely stored server-side, shared across devices, or protected by production authentication.
+- Discovery profiles are illustrative samples, not verified real or active members.
+- Access fees shown on sample profiles are placeholders. No payment is collected, no STK Push is initiated, no manual transaction code is verified, and chat access is not unlocked by this prototype.
+- No guaranteed earnings are represented. Any future chat compensation must be real, documented, and accurately disclosed before users pay an access fee.
+- Do not request or store M-Pesa PINs, PayPal passwords, crypto private keys, or recovery phrases.
+
+Before launch, implement server-side authentication and a database, consent/age verification and moderation, a real Safaricom Daraja STK Push integration with signed/verified callbacks and server-side transaction checks, and a support/refund process. Keep provider credentials on the server. A manual M-Pesa receipt or transaction code must be checked with the payment provider before any account is activated.
