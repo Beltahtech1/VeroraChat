@@ -163,6 +163,52 @@ function payoutDisplay(p){if(!p)return {title:'Not set up yet',subtitle:'Choose 
 function renderDashboard(){var a=getAccount();if(!a)return;document.getElementById('welcome-title').textContent='Welcome, '+a.name.split(' ')[0];document.getElementById('profile-name').textContent=a.name;document.getElementById('profile-email').textContent=a.email;document.getElementById('profile-initials').textContent=a.name.split(/\s+/).slice(0,2).map(function(s){return s.charAt(0).toUpperCase()}).join('');document.getElementById('profile-date').textContent=new Date(a.createdAt).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});var pd=payoutDisplay(a.payout);document.getElementById('payout-icon').textContent=a.payout?methodIcons[a.payout.method]:'↗';document.getElementById('payout-title').textContent=pd.title;document.getElementById('payout-subtitle').textContent=pd.subtitle;document.getElementById('payout-summary').innerHTML=pd.lines.map(function(line){return '<div class="detail"><span>'+esc(line[0])+'</span><strong>'+esc(line[1]||'—')+'</strong></div>'}).join('');document.getElementById('edit-name').value=a.name;document.getElementById('edit-email').value=a.email}
 function showDashboard(){document.getElementById('auth-forms').classList.remove('hidden');document.getElementById('payout-setup').classList.add('hidden');showPage('dashboard');renderDashboard();showDashboardTab('profile')}
 window.logout=function(){currentEmail='';localStorage.removeItem(SESSION_KEY);showPage('public');showToast('You have logged out.')};
+
+var demoProfiles=[
+{id:'maya',name:'Maya',age:26,location:'Nairobi, Kenya',category:'vibes',categoryName:'Good vibes',art:'☀️',tone:'green',price:250,interests:['Music','Daily life','Friendly chat'],bio:'Easygoing conversations about music, everyday life and the little things that make a day better.'},
+{id:'daniel',name:'Daniel',age:29,location:'London, United Kingdom',category:'abroad',categoryName:'People abroad',art:'🌍',tone:'blue',price:300,interests:['Travel','Life abroad','Culture'],bio:'Share stories about life in another country, travel ideas and cultural differences.'},
+{id:'amani',name:'Amani',age:24,location:'Mombasa, Kenya',category:'swahili',categoryName:'Teach me Swahili',art:'🗣️',tone:'gold',price:250,interests:['Kiswahili','Language exchange','Learning'],bio:'Practice everyday Kiswahili and exchange language tips in a friendly learning-focused conversation.'},
+{id:'leo',name:'Leo',age:28,location:'Cape Town, South Africa',category:'culture',categoryName:'Culture & travel',art:'✈️',tone:'purple',price:350,interests:['Food','Travel','Traditions'],bio:'Talk about local food, traditions, places to visit and the stories behind them.'},
+{id:'zuri',name:'Zuri',age:27,location:'Kisumu, Kenya',category:'playful',categoryName:'Playful talk · 18+',art:'✨',tone:'pink',price:450,interests:['Flirting','Humour','Adult chat'],bio:'A playful, respectful adults-only conversation style. Keep boundaries clear and treat each other kindly.'},
+{id:'sam',name:'Sam',age:30,location:'Accra, Ghana',category:'night',categoryName:'Late-night chat · 18+',art:'🌙',tone:'blue',price:450,interests:['Late-night talks','Music','Life'],bio:'A relaxed place for grown-up conversations, thoughtful questions and winding down at the end of the day.'}
+];
+function renderProfiles(){
+ var grid=document.getElementById('profile-grid');if(!grid)return;
+ var search=(document.getElementById('profile-search').value||'').trim().toLowerCase();
+ var category=document.getElementById('profile-category').value||'all';
+ var matches=demoProfiles.filter(function(p){
+  var haystack=[p.name,p.location,p.categoryName,p.bio].concat(p.interests).join(' ').toLowerCase();
+  return (category==='all'||p.category===category)&&(!search||haystack.indexOf(search)!==-1);
+ });
+ if(!matches.length){grid.innerHTML='<div class="empty-state">No sample profiles match that search. Try another interest or choose “All conversation types”.</div>';return}
+ grid.innerHTML=matches.map(function(p){
+  return '<article class="profile-card"><div class="profile-art '+p.tone+'">'+p.art+'<span class="age-pill">'+p.age+' years</span></div><div class="profile-body"><div class="profile-category">'+esc(p.categoryName)+'</div><h3>'+esc(p.name)+'</h3><div class="profile-meta">'+esc(p.location)+' · '+p.age+'+</div><p>'+esc(p.bio)+'</p><div class="profile-tags">'+p.interests.map(function(t){return '<span>'+esc(t)+'</span>'}).join('')+'</div><div class="profile-bottom"><div class="profile-price">KSh '+p.price+'<small>proposed access fee</small></div><button class="btn btn-primary" type="button" onclick="selectProfile(\''+p.id+'\')">View profile →</button></div></div></article>';
+ }).join('');
+}
+window.renderProfiles=renderProfiles;
+window.showDiscovery=function(){
+ if(!currentEmail||!getAccount()){showPage('public');showToast('Please create an account or log in first.');return}
+ showPage('discovery');renderProfiles();
+ document.getElementById('profile-detail').classList.add('hidden');
+ document.getElementById('activation-panel').classList.add('hidden');
+ document.getElementById('discovery-welcome').textContent='Welcome, '+(getAccount().name||'there').split(' ')[0]+' — choose a conversation';
+};
+window.selectProfile=function(id){
+ var p=demoProfiles.find(function(item){return item.id===id});if(!p)return;
+ var detail=document.getElementById('profile-detail'),activation=document.getElementById('activation-panel');
+ activation.classList.add('hidden');detail.classList.remove('hidden');
+ detail.innerHTML='<div class="detail-hero"><div class="profile-art '+p.tone+'">'+p.art+'<span class="age-pill">'+p.age+' years</span></div><div><div class="profile-category">'+esc(p.categoryName)+'</div><h2 style="margin:8px 0">'+esc(p.name)+', '+p.age+'</h2><div class="profile-meta">'+esc(p.location)+'</div><p class="muted-copy">'+esc(p.bio)+'</p><div class="profile-tags">'+p.interests.map(function(t){return '<span>'+esc(t)+'</span>'}).join('')+'</div></div></div><div class="detail-panel"><h3>About this conversation</h3><p class="muted-copy">This is a sample profile for the website preview, not a verified or currently available member. Real member profiles and chat availability are not connected yet.</p><div class="detail"><span>Category</span><strong>'+esc(p.categoryName)+'</strong></div><div class="detail"><span>Age</span><strong>'+p.age+'</strong></div><div class="detail"><span>Proposed access fee</span><strong>KSh '+p.price+'</strong></div><div class="payment-note">Demo only: no payment will be requested or processed here. The fee is illustrative and does not activate a real chat.</div><div class="payment-action"><button type="button" class="btn btn-primary" onclick="showActivation(\''+p.id+'\')">Continue to activation preview →</button><button type="button" class="btn btn-ghost" onclick="backToProfiles()">Back to profiles</button></div></div>';
+ detail.scrollIntoView({behavior:'smooth',block:'start'});
+};
+window.backToProfiles=function(){document.getElementById('profile-detail').classList.add('hidden');document.getElementById('activation-panel').classList.add('hidden');document.getElementById('profile-grid').scrollIntoView({behavior:'smooth',block:'start'})};
+window.showActivation=function(id){
+ var p=demoProfiles.find(function(item){return item.id===id});if(!p)return;
+ var panel=document.getElementById('activation-panel');panel.classList.remove('hidden');
+ panel.innerHTML='<div class="profile-category">Activation preview</div><h2 style="margin:8px 0 5px">Connect with '+esc(p.name)+'</h2><p class="muted-copy">Proposed access fee: <strong>KSh '+p.price+'</strong>. This is a preview only. No payment is taken, verified or recorded, and no chat is unlocked.</p><div class="payment-note">Live activation requires a secure payment provider integration, server-side transaction verification and a real member/chat service. Those services are not connected in this prototype.</div><div class="payment-action"><button type="button" class="btn btn-ghost" onclick="selectProfile(\''+p.id+'\')">← Back to profile</button><button type="button" class="btn btn-ghost" onclick="backToProfiles()">Browse other profiles</button></div>';
+ panel.scrollIntoView({behavior:'smooth',block:'start'});
+};
+window.backToDashboard=function(){showDashboard()};
+
 document.getElementById('year').textContent=new Date().getFullYear();
 document.getElementById('brand-link').addEventListener('click',function(e){e.preventDefault();if(currentEmail&&getAccount())showDiscovery();else showPage('public')});
 var saved=normEmail(localStorage.getItem(SESSION_KEY));if(saved&&readAccounts()[saved]){currentEmail=saved;showDiscovery()}else{showPage('public')}
