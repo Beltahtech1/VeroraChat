@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VeroraChat - Paid Online Chatting & Instant Payouts</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              400: '#34d399',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              900: '#064e3b',
+            },
+            cyber: {
+              cyan: '#06b6d4',
+              violet: '#8b5cf6',
+            }
+          },
+          animation: {
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'marquee': 'marquee 30s linear infinite',
+          },
+          keyframes: {
+            marquee: {
+              '0%': { transform: 'translateX(0%)' },
+              '100%': { transform: 'translateX(-50%)' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Alpine JS -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+  <!-- Google Fonts & FontAwesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .glass-card {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-card-hover {
+      transition: all 0.3s ease;
+    }
+    .glass-card-hover:hover {
+      border-color: rgba(16, 185, 129, 0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px -10px rgba(16, 185, 129, 0.15);
+    }
+    .glow-effect {
+      box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.25);
+    }
+    /* Hide scrollbars for slick look */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+
+<body class="bg-slate-950 text-slate-100 antialiased selection:bg-brand-500 selection:text-slate-950 min-h-screen flex flex-col justify-between"
+      x-data="appState()">
+
+  <!-- HEADER -->
+  <header class="sticky top-0 z-40 bg-slate-950/80 backdrop-blur-md border-b border-slate-800/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="#" class="flex items-center space-x-3 group">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 via-brand-500 to-cyber-cyan flex items-center justify-center text-slate-950 font-black text-xl shadow-lg shadow-brand-500/20 group-hover:scale-105 transition">
+          <i class="fa-solid fa-comments text-slate-950"></i>
+        </div>
+        <div>
+          <span class="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-100 to-brand-400 bg-clip-text text-transparent">
+            Verora<span class="text-brand-400">Chat</span>
+          </span>
+          <span class="block text-[10px] font-semibold uppercase tracking-widest text-slate-400 -mt-1">Verified Paid Platform</span>
+        </div>
+      </a>
+
+      <!-- Navigation Links -->
+      <nav class="hidden md:flex items-center space-x-8 text-sm font-semibold text-slate-300">
+        <a href="#how-it-works" class="hover:text-brand-400 transition">How It Works</a>
+        <a href="#live-clients" class="hover:text-brand-400 transition">Live Clients</a>
+        <a href="#calculator" class="hover:text-brand-400 transition">Earnings Calculator</a>
+        <a href="#earners" class="hover:text-brand-400 transition">Payout Reviews</a>
+        <a href="#faq" class="hover:text-brand-400 transition">FAQ</a>
+      </nav>
+
+      <!-- CTA Actions -->
+      <div class="flex items-center space-x-4">
+        <button @click="openLoginModal = true" class="hidden sm:inline-block text-sm font-semibold text-slate-300 hover:text-white px-3 py-2 transition">
+          Sign In
+        </button>
+        <button @click="openSignupModal = true" class="relative group overflow-hidden rounded-xl p-px font-semibold text-xs sm:text-sm shadow-lg shadow-brand-500/20">
+          <span class="absolute inset-0 bg-gradient-to-r from-brand-500 via-cyber-cyan to-brand-400 transition-all duration-300 group-hover:opacity-90"></span>
+          <span class="relative block px-5 py-2.5 rounded-[11px] bg-slate-950 text-emerald-400 font-bold group-hover:bg-transparent group-hover:text-slate-950 transition">
+            Start Earning Now →
+          </span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- LIVE PAYOUT TICKER MARQUEE -->
+  <div class="bg-slate-900/90 border-b border-slate-800/80 py-2.5 overflow-hidden relative">
+    <div class="max-w-7xl mx-auto px-4 flex items-center">
+      <div class="flex items-center space-x-2 bg-brand-500/10 border border-brand-500/30 text-brand-400 text-xs font-bold px-3 py-1 rounded-full shrink-0 mr-4 z-10 shadow-sm">
+        <span class="w-2 h-2 rounded-full bg-brand-400 animate-pulse"></span>
+        <span>LIVE PAYOUTS</span>
+      </div>
+
+      <div class="flex overflow-hidden whitespace-nowrap relative w-full">
+        <div class="inline-flex space-x-8 animate-marquee text-xs text-slate-300 font-medium">
+          <template x-for="payout in recentPayouts" :key="payout.id">
+            <span class="flex items-center space-x-2 bg-slate-950/50 px-3 py-1 rounded-lg border border-slate-800">
+              <span class="text-slate-100 font-semibold" x-text="payout.name"></span>
+              <span class="text-slate-500">from</span>
+              <span class="text-slate-300" x-text="payout.country"></span>
+              <span class="text-slate-500">•</span>
+              <span class="text-brand-400 font-bold" x-text="'$' + payout.amount.toFixed(2)"></span>
+              <span class="text-slate-500">via</span>
+              <span class="text-cyber-cyan font-semibold" x-text="payout.method"></span>
+              <span class="text-[10px] text-slate-500" x-text="'(' + payout.time + ')'"></span>
+            </span>
+          </template>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <!-- HERO SECTION -->
+    <section class="relative pt-16 pb-24 overflow-hidden">
+      <!-- Background Ambient Glow -->
+      <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-brand-500/15 blur-[120px] rounded-full pointer-events-none"></div>
+      <div class="absolute top-1/3 right-10 w-[300px] h-[300px] bg-cyber-cyan/10 blur-[100px] rounded-full pointer-events-none"></div>
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+        
+        <!-- Live Online Chatter Count Badge -->
+        <div class="inline-flex items-center space-x-2 bg-slate-900/80 border border-emerald-500/30 rounded-full px-4 py-1.5 text-xs font-semibold text-slate-200 mb-8 shadow-inner">
+          <span class="relative flex h-2.5 w-2.5">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+          </span>
+          <span>1,842 Verified Chatters Active Online</span>
+        </div>
+
+        <h1 class="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-slate-100 max-w-4xl mx-auto leading-tight sm:leading-none">
+          Turn Simple Online Chats Into <span class="bg-gradient-to-r from-brand-400 via-emerald-300 to-cyber-cyan bg-clip-text text-transparent">Daily Cash</span>
+        </h1>
+
+        <p class="mt-6 text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto font-normal leading-relaxed">
+          Connect with verified global partners across North America & Europe. Earn guaranteed payouts per reply with instant withdrawals to <span class="text-slate-200 font-semibold">M-Pesa, Mobile Money, PayPal & Bank</span>.
+        </p>
+
+        <!-- CTAs -->
+        <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <button @click="openSignupModal = true" class="w-full sm:w-auto bg-brand-500 hover:bg-brand-600 text-slate-950 font-extrabold px-8 py-4 rounded-xl text-base transition duration-200 shadow-xl shadow-brand-500/25 flex items-center justify-center space-x-2">
+            <span>Create Free Chatter Account</span>
+            <i class="fa-solid fa-arrow-right text-xs"></i>
+          </button>
+          <a href="#live-demo" class="w-full sm:w-auto bg-slate-900/80 hover:bg-slate-800 border border-slate-700 text-slate-200 font-semibold px-8 py-4 rounded-xl text-base transition flex items-center justify-center space-x-2">
+            <i class="fa-solid fa-circle-play text-brand-400"></i>
+            <span>Try Live Simulator</span>
+          </a>
+        </div>
+
+        <!-- Trust Badges Row -->
+        <div class="mt-14 pt-8 border-t border-slate-800/60 max-w-3xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+          <div class="p-3 rounded-lg bg-slate-900/40 border border-slate-800/40">
+            <i class="fa-solid fa-bolt text-brand-400 text-lg mb-1"></i>
+            <p class="text-xs font-bold text-slate-200">Instant Cashouts</p>
+            <p class="text-[11px] text-slate-500">Under 60 Seconds</p>
+          </div>
+          <div class="p-3 rounded-lg bg-slate-900/40 border border-slate-800/40">
+            <i class="fa-solid fa-shield-halved text-cyber-cyan text-lg mb-1"></i>
+            <p class="text-xs font-bold text-slate-200">100% Encrypted</p>
+            <p class="text-[11px] text-slate-500">Privacy Guaranteed</p>
+          </div>
+          <div class="p-3 rounded-lg bg-slate-900/40 border border-slate-800/40">
+            <i class="fa-solid fa-globe text-brand-400 text-lg mb-1"></i>
+            <p class="text-xs font-bold text-slate-200">Global Coverage</p>
+            <p class="text-[11px] text-slate-500">Work From Anywhere</p>
+          </div>
+          <div class="p-3 rounded-lg bg-slate-900/40 border border-slate-800/40">
+            <i class="fa-solid fa-headset text-cyber-cyan text-lg mb-1"></i>
+            <p class="text-xs font-bold text-slate-200">24/7 Agent Support</p>
+            <p class="text-[11px] text-slate-500">Dedicated Helpdesk</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LIVE DEMO CHAT SIMULATOR SECTION -->
+    <section id="live-demo" class="py-16 bg-slate-900/50 border-y border-slate-800/80">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto mb-12">
+          <span class="text-xs font-extrabold uppercase tracking-widest text-brand-400">Interactive Preview</span>
+          <h2 class="text-3xl font-bold text-slate-100 mt-2">Test Drive the Chatting Experience</h2>
+          <p class="text-slate-400 text-sm mt-2">Pick a client, type a friendly reply, and watch earnings get added instantly to your test balance.</p>
+        </div>
+
+        <!-- Chat Simulator Box -->
+        <div class="max-w-4xl mx-auto glass-card rounded-2xl overflow-hidden border border-slate-800 shadow-2xl grid grid-cols-1 md:grid-cols-3">
+          
+          <!-- Client Selector Sidebar -->
+          <div class="bg-slate-950/60 p-4 border-b md:border-b-0 md:border-r border-slate-800/80">
+            <p class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Available Clients</p>
+            <div class="space-y-2">
+              <template x-for="client in clients" :key="client.id">
+                <button @click="selectClient(client)" 
+                        :class="activeClient.id === client.id ? 'bg-brand-500/10 border-brand-500/50 text-white' : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:text-slate-200'"
+                        class="w-full text-left p-3 rounded-xl border flex items-center space-x-3 transition">
+                  <div class="relative">
+                    <img :src="client.avatar" :alt="client.name" class="w-10 h-10 rounded-full object-cover">
+                    <span class="absolute bottom-0 right-0 w-3 h-3 bg-brand-500 border-2 border-slate-950 rounded-full"></span>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center justify-between">
+                      <p class="text-sm font-bold truncate" x-text="client.name"></p>
+                      <span class="text-[10px] bg-slate-800 px-1.5 py-0.5 rounded text-slate-300" x-text="client.flag"></span>
+                    </div>
+                    <p class="text-xs text-brand-400 font-semibold" x-text="'$' + client.rate.toFixed(2) + ' / msg'"></p>
+                  </div>
+                </button>
+              </template>
+            </div>
+
+            <!-- Demo Stats Box -->
+            <div class="mt-6 p-4 rounded-xl bg-slate-900/90 border border-slate-800">
+              <p class="text-xs text-slate-400">Test Session Earnings:</p>
+              <p class="text-2xl font-black text-brand-400 mt-1" x-text="'$' + demoEarnings.toFixed(2)"></p>
+              <p class="text-[11px] text-slate-500 mt-1" x-text="demoMessageCount + ' test replies sent'"></p>
+            </div>
+          </div>
+
+          <!-- Active Chat Window -->
+          <div class="md:col-span-2 flex flex-col h-[480px] bg-slate-950/40">
+            
+            <!-- Chat Header -->
+            <div class="p-4 border-b border-slate-800/80 bg-slate-900/50 flex items-center justify-between">
+              <div class="flex items-center space-x-3">
+                <img :src="activeClient.avatar" :alt="activeClient.name" class="w-10 h-10 rounded-full object-cover">
+                <div>
+                  <div class="flex items-center space-x-2">
+                    <h3 class="text-sm font-bold text-white" x-text="activeClient.name"></h3>
+                    <span class="text-xs" x-text="activeClient.flag"></span>
+                  </div>
+                  <p class="text-xs text-slate-400" x-text="activeClient.location + ' • Age ' + activeClient.age"></p>
+                </div>
+              </div>
+              <div class="text-right">
+                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-brand-500/10 text-brand-400 border border-brand-500/20">
+                  Rate: $<span x-text="activeClient.rate.toFixed(2)"></span>
+                </span>
+              </div>
+            </div>
+
+            <!-- Messages Area -->
+            <div class="flex-1 p-4 overflow-y-auto space-y-3 no-scrollbar" id="chat-box">
+              <template x-for="msg in currentChatHistory" :key="msg.id">
+                <div :class="msg.sender === 'user' ? 'flex justify-end' : 'flex justify-start'">
+                  <div :class="msg.sender === 'user' 
+                              ? 'bg-brand-500 text-slate-950 font-medium rounded-2xl rounded-tr-none px-4 py-2.5 max-w-[80%] text-sm shadow-md' 
+                              : 'bg-slate-800 text-slate-200 rounded-2xl rounded-tl-none px-4 py-2.5 max-w-[80%] text-sm border border-slate-700/50'">
+                    <p x-text="msg.text"></p>
+                    <span :class="msg.sender === 'user' ? 'text-slate-900/70' : 'text-slate-400'" class="text-[10px] block text-right mt-1" x-text="msg.time"></span>
+                  </div>
+                </div>
+              </template>
+              
+              <div x-show="isTyping" class="flex items-center space-x-2 text-xs text-slate-400 italic">
+                <span class="w-2 h-2 rounded-full bg-brand-400 animate-bounce"></span>
+                <span class="w-2 h-2 rounded-full bg-brand-400 animate-bounce [animation-delay:0.2s]"></span>
+                <span class="w-2 h-2 rounded-full bg-brand-400 animate-bounce [animation-delay:0.4s]"></span>
+                <span x-text="activeClient.name + ' is typing...'"></span>
+              </div>
+            </div>
+
+            <!-- Message Input Form -->
+            <form @submit.prevent="sendDemoMessage" class="p-3 border-t border-slate-800 bg-slate-900/70 flex items-center space-x-2">
+              <input type="text" 
+                     x-model="userDemoMessage" 
+                     placeholder="Type a friendly response..." 
+                     class="flex-1 bg-slate-950 border border-slate-700/80 rounded-xl px-4 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-brand-500 transition">
+              <button type="submit" 
+                      :disabled="!userDemoMessage.trim()"
+                      class="bg-brand-500 hover:bg-brand-600 disabled:opacity-50 text-slate-950 font-bold px-5 py-2.5 rounded-xl text-sm transition flex items-center space-x-1">
+                <span>Send</span>
+                <i class="fa-solid fa-paper-plane text-xs"></i>
+              </button>
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LIVE CLIENT QUEUE SECTION -->
+    <section id="live-clients" class="py-20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-widest text-brand-400">Available Queue</span>
+            <h2 class="text-3xl font-bold text-slate-100 mt-2">Active Global Clients Seeking Chatters</h2>
+            <p class="text-slate-400 text-sm mt-1">Clients are automatically routed to registered chatters based on preferred language and availability.</p>
+          </div>
+
+          <!-- Country Filter Buttons -->
+          <div class="mt-4 md:mt-0 flex flex-wrap gap-2">
+            <template x-for="region in ['All', 'USA', 'UK', 'Canada', 'Germany', 'Australia']" :key="region">
+              <button @click="selectedFilter = region" 
+                      :class="selectedFilter === region ? 'bg-brand-500 text-slate-950 font-bold' : 'bg-slate-900 text-slate-400 hover:text-slate-200 border border-slate-800'"
+                      class="px-3.5 py-1.5 rounded-lg text-xs transition">
+                <span x-text="region"></span>
+              </button>
+            </template>
+          </div>
+        </div>
+
+        <!-- Client Cards Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <template x-for="client in filteredClients" :key="client.id">
+            <div class="glass-card glass-card-hover rounded-2xl p-5 flex flex-col justify-between relative overflow-hidden">
+              
+              <!-- Top Badge -->
+              <div class="flex items-center justify-between mb-4">
+                <span class="text-xs font-bold text-slate-300 bg-slate-900 px-2.5 py-1 rounded-full border border-slate-800 flex items-center space-x-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-brand-400 animate-pulse"></span>
+                  <span x-text="client.status"></span>
+                </span>
+                <span class="text-xs font-black text-brand-400 bg-brand-500/10 px-2.5 py-1 rounded-full border border-brand-500/20" x-text="'$' + client.rate.toFixed(2) + ' / msg'"></span>
+              </div>
+
+              <!-- Profile Details -->
+              <div class="text-center my-2">
+                <div class="relative inline-block mb-3">
+                  <img :src="client.avatar" :alt="client.name" class="w-20 h-20 rounded-full object-cover border-2 border-brand-500/30 mx-auto">
+                  <span class="absolute bottom-0 right-0 text-xl" x-text="client.flag"></span>
+                </div>
+                <h3 class="text-lg font-bold text-slate-100" x-text="client.name + ', ' + client.age"></h3>
+                <p class="text-xs text-slate-400 mt-0.5" x-text="client.location"></p>
+                <p class="text-xs text-slate-300 italic mt-3 line-clamp-2 bg-slate-950/40 p-2.5 rounded-xl border border-slate-800/60" x-text="'&quot;' + client.bio + '&quot;'"></p>
+              </div>
+
+              <!-- Action Button -->
+              <button @click="openSignupModal = true" class="mt-5 w-full bg-slate-900 hover:bg-brand-500 hover:text-slate-950 border border-slate-700 hover:border-brand-500 text-slate-200 font-bold py-2.5 rounded-xl text-xs transition duration-200 flex items-center justify-center space-x-2">
+                <i class="fa-solid fa-lock text-[10px]"></i>
+                <span>Register to Claim Chat</span>
+              </button>
+
+            </div>
+          </template>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS SECTION -->
+    <section id="how-it-works" class="py-20 bg-slate-900/40 border-y border-slate-800/80">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center max-w-2xl mx-auto mb-16">
+          <span class="text-xs font-extrabold uppercase tracking-widest text-brand-400">Simple Process</span>
+          <h2 class="text-3xl font-bold text-slate-100 mt-2">Start Earning in 3 Easy Steps</h2>
+          <p class="text-slate-400 text-sm mt-2">No previous experience required. Get set up and receive your first chat routing in under 5 minutes.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          
+          <!-- Step 1 -->
+          <div class="glass-card rounded-2xl p-8 relative">
+            <div class="w-12 h-12 rounded-xl bg-brand-500/10 border border-brand-500/30 text-brand-400 flex items-center justify-center font-black text-xl mb-6">
+              01
+            </div>
+            <h3 class="text-xl font-bold text-slate-100 mb-3">Create Free Account</h3>
+            <p class="text-slate-400 text-sm leading-relaxed">
+              Sign up with your phone number or email address. Select your preferred withdrawal method (M-Pesa, Mobile Money, PayPal, or Direct Bank).
+            </p>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="glass-card rounded-2xl p-8 relative">
+            <div class="w-12 h-12 rounded-xl bg-cyber-cyan/10 border border-cyber-cyan/30 text-cyber-cyan flex items-center justify-center font-black text-xl mb-6">
+              02
+            </div>
+            <h3 class="text-xl font-bold text-slate-100 mb-3">Reply & Chat Online</h3>
+            <p class="text-slate-400 text-sm leading-relaxed">
+              Accept incoming chat requests on your phone or computer. Engage in friendly, casual conversations with international clients.
+            </p>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="glass-card rounded-2xl p-8 relative">
+            <div class="w-12 h-12 rounded-xl bg-brand-500/10 border border-brand-500/30 text-brand-400 flex items-center justify-center font-black text-xl mb-6">
+              03
+            </div>
+            <h3 class="text-xl font-bold text-slate-100 mb-3">Instant Cash Out</h3>
+            <p class="text-slate-400 text-sm leading-relaxed">
+              Earnings accumulate in real-time after every message. Request withdrawals anytime with instantaneous processing directly to your account.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- EARNINGS CALCULATOR SECTION -->
+    <section id="calculator" class="py-20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="glass-card rounded-3xl p-8 md:p-12 max-w-4xl mx-auto border border-slate-800 glow-effect">
+          
+          <div class="text-center mb-10">
+            <span class="text-xs font-extrabold uppercase tracking-widest text-cyber-cyan">Income Estimator</span>
+            <h2 class="text-3xl font-bold text-slate-100 mt-2">Calculate Your Potential Daily Earnings</h2>
+            <p class="text-slate-400 text-sm mt-1">Adjust the sliders below based on how much time you want to spend chatting per day.</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+            
+            <!-- Sliders -->
+            <div class="space-y-6">
+              <div>
+                <div class="flex justify-between items-center mb-2">
+                  <label class="text-sm font-semibold text-slate-300">Chatting Hours Per Day</label>
+                  <span class="text-base font-bold text-brand-400" x-text="calcHours + ' Hours'"></span>
+                </div>
+                <input type="range" min="1" max="10" step="1" x-model="calcHours" 
+                       class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-brand-500">
+              </div>
+
+              <div>
+                <div class="flex justify-between items-center mb-2">
+                  <label class="text-sm font-semibold text-slate-300">Average Messages / Hour</label>
+                  <span class="text-base font-bold text-cyber-cyan" x-text="calcSpeed + ' msgs'"></span>
+                </div>
+                <input type="range" min="15" max="60" step="5" x-model="calcSpeed" 
+                       class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-cyber-cyan">
+              </div>
+
+              <div class="p-4 rounded-xl bg-slate-950/60 border border-slate-800 text-xs text-slate-400 space-y-1">
+                <p><i class="fa-solid fa-check text-brand-400 mr-2"></i>Based on avg rate of $0.25 USD per reply</p>
+                <p><i class="fa-solid fa-check text-brand-400 mr-2"></i>Unlimited messages available 24 hours a day</p>
+              </div>
+            </div>
+
+            <!-- Calculated Output Box -->
+            <div class="bg-slate-950/80 p-8 rounded-2xl border border-slate-800 text-center flex flex-col justify-center">
+              <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Estimated Daily Income</p>
+              <p class="text-4xl sm:text-5xl font-black text-brand-400 mt-2" x-text="'$' + (calcHours * calcSpeed * 0.25).toFixed(2)"></p>
+              <p class="text-xs text-slate-500 mt-1" x-text="'≈ KES ' + (calcHours * calcSpeed * 0.25 * 130).toLocaleString() + ' / day'"></p>
+
+              <hr class="my-6 border-slate-800">
+
+              <div class="flex justify-between items-center text-sm">
+                <span class="text-slate-400">Weekly Total (7 days):</span>
+                <span class="font-extrabold text-slate-100" x-text="'$' + (calcHours * calcSpeed * 0.25 * 7).toFixed(2)"></span>
+              </div>
+
+              <button @click="openSignupModal = true" class="mt-6 w-full bg-brand-500 hover:bg-brand-600 text-slate-950 font-black py-3 rounded-xl text-sm transition">
+                Start Chatting for Real Cash
+              </button>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- TESTIMONIALS & EARNER REVIEWS -->
+    <section id="earners" class="py-20 bg-slate-900/40 border-y border-slate-800/80">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center max-w-2xl mx-auto mb-16">
+          <span class="text-xs font-extrabold uppercase tracking-widest text-brand-400">Community Feedback</span>
+          <h2 class="text-3xl font-bold text-slate-100 mt-2">Verified Earner Testimonials</h2>
+          <p class="text-slate-400 text-sm mt-2">See what active chatters have to say about their weekly payouts and platform experience.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          
+          <!-- Testimonial 1 -->
+          <div class="glass-card rounded-2xl p-6 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center space-x-1 text-amber-400 text-xs mb-4">
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+              </div>
+              <p class="text-sm text-slate-300 leading-relaxed italic">
+                "I was skeptical at first, but VeroraChat is genuine. I made $85 in my first 3 days chatting after classes. Payout hits my M-Pesa within 30 seconds!"
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between">
+              <div>
+                <p class="text-sm font-bold text-slate-100">Brian M.</p>
+                <p class="text-xs text-slate-500">Nairobi, Kenya</p>
+              </div>
+              <span class="bg-brand-500/10 text-brand-400 border border-brand-500/20 px-2.5 py-1 rounded-full text-xs font-extrabold">
+                +$142.00 Last Week
+              </span>
+            </div>
+          </div>
+
+          <!-- Testimonial 2 -->
+          <div class="glass-card rounded-2xl p-6 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center space-x-1 text-amber-400 text-xs mb-4">
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+              </div>
+              <p class="text-sm text-slate-300 leading-relaxed italic">
+                "The interface is smooth and clients are very polite. Perfect side income while working from home. Highly recommend if you want quick flexible pay."
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between">
+              <div>
+                <p class="text-sm font-bold text-slate-100">Amina K.</p>
+                <p class="text-xs text-slate-500">Mombasa, Kenya</p>
+              </div>
+              <span class="bg-brand-500/10 text-brand-400 border border-brand-500/20 px-2.5 py-1 rounded-full text-xs font-extrabold">
+                +$210.50 Last Week
+              </span>
+            </div>
+          </div>
+
+          <!-- Testimonial 3 -->
+          <div class="glass-card rounded-2xl p-6 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center space-x-1 text-amber-400 text-xs mb-4">
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+              </div>
+              <p class="text-sm text-slate-300 leading-relaxed italic">
+                "Customer support on WhatsApp was very helpful when setting up my bank payout details. Smooth experience overall."
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between">
+              <div>
+                <p class="text-sm font-bold text-slate-100">David O.</p>
+                <p class="text-xs text-slate-500">Kampala, Uganda</p>
+              </div>
+              <span class="bg-brand-500/10 text-brand-400 border border-brand-500/20 px-2.5 py-1 rounded-full text-xs font-extrabold">
+                +$188.00 Last Week
+              </span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- FAQ SECTION -->
+    <section id="faq" class="py-20">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center mb-16">
+          <span class="text-xs font-extrabold uppercase tracking-widest text-brand-400">Help Center</span>
+          <h2 class="text-3xl font-bold text-slate-100 mt-2">Frequently Asked Questions</h2>
+        </div>
+
+        <div class="space-y-4">
+          
+          <div class="glass-card rounded-2xl p-6 cursor-pointer" @click="activeFaq = activeFaq === 1 ? null : 1">
+            <div class="flex justify-between items-center">
+              <h3 class="text-base font-bold text-slate-100">How do I get paid for my chats?</h3>
+              <i class="fa-solid text-slate-400 transition" :class="activeFaq === 1 ? 'fa-chevron-up text-brand-400' : 'fa-chevron-down'"></i>
+            </div>
+            <p x-show="activeFaq === 1" x-collapse class="mt-3 text-sm text-slate-400 leading-relaxed">
+              Every message you send accumulates earnings directly in your VeroraChat balance. You can request a withdrawal at any time once you reach the minimum threshold of $5.00 via M-Pesa, MTN Mobile Money, PayPal, or Direct Bank.
+            </p>
+          </div>
+
+          <div class="glass-card rounded-2xl p-6 cursor-pointer" @click="activeFaq = activeFaq === 2 ? null : 2">
+            <div class="flex justify-between items-center">
+              <h3 class="text-base font-bold text-slate-100">Is there any registration fee?</h3>
+              <i class="fa-solid text-slate-400 transition" :class="activeFaq === 2 ? 'fa-chevron-up text-brand-400' : 'fa-chevron-down'"></i>
+            </div>
+            <p x-show="activeFaq === 2" x-collapse class="mt-3 text-sm text-slate-400 leading-relaxed">
+              Registration on VeroraChat is 100% free. We never charge users to create an account or start chatting.
+            </p>
+          </div>
+
+          <div class="glass-card rounded-2xl p-6 cursor-pointer" @click="activeFaq = activeFaq === 3 ? null : 3">
+            <div class="flex justify-between items-center">
+              <h3 class="text-base font-bold text-slate-100">What are the requirements to join?</h3>
+              <i class="fa-solid text-slate-400 transition" :class="activeFaq === 3 ? 'fa-chevron-up text-brand-400' : 'fa-chevron-down'"></i>
+            </div>
+            <p x-show="activeFaq === 3" x-collapse class="mt-3 text-sm text-slate-400 leading-relaxed">
+              You must be at least 18 years old, have access to a smartphone or computer with internet connection, and possess basic English communication skills.
+            </p>
+          </div>
+
+          <div class="glass-card rounded-2xl p-6 cursor-pointer" @click="activeFaq = activeFaq === 4 ? null : 4">
+            <div class="flex justify-between items-center">
+              <h3 class="text-base font-bold text-slate-100">How long do payouts take to process?</h3>
+              <i class="fa-solid text-slate-400 transition" :class="activeFaq === 4 ? 'fa-chevron-up text-brand-400' : 'fa-chevron-down'"></i>
+            </div>
+            <p x-show="activeFaq === 4" x-collapse class="mt-3 text-sm text-slate-400 leading-relaxed">
+              M-Pesa and Mobile Money cashouts are processed automatically and usually arrive within 30 to 60 seconds. Bank transfers may take up to 24 hours depending on processing windows.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- SIGNUP MODAL -->
+  <div x-show="openSignupModal" 
+       x-transition.opacity
+       class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md"
+       style="display: none;">
+    
+    <div @click.away="openSignupModal = false" 
+         class="glass-card rounded-3xl p-6 sm:p-8 max-w-md w-full border border-slate-800 shadow-2xl relative">
+      
+      <button @click="openSignupModal = false" class="absolute top-5 right-5 text-slate-400 hover:text-white text-lg">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="text-center mb-6">
+        <div class="w-12 h-12 rounded-2xl bg-brand-500/10 border border-brand-500/30 text-brand-400 flex items-center justify-center mx-auto text-xl mb-3">
+          <i class="fa-solid fa-user-plus"></i>
+        </div>
+        <h3 class="text-2xl font-bold text-slate-100">Create Chatter Account</h3>
+        <p class="text-xs text-slate-400 mt-1">Join thousands earning daily from casual conversations.</p>
+      </div>
+
+      <form @submit.prevent="submitRegistration" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Full Name</label>
+          <input type="text" required placeholder="e.g. John Doe" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-brand-500">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Phone Number (M-Pesa / MoMo)</label>
+          <input type="tel" required placeholder="+254 700 000 000" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-brand-500">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Preferred Payment Method</label>
+          <select class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-slate-100 focus:outline-none focus:border-brand-500">
+            <option>M-Pesa (Kenya / Tanzania)</option>
+            <option>MTN / Airtel Mobile Money</option>
+            <option>PayPal Account</option>
+            <option>Direct Bank Transfer</option>
+            <option>Crypto (USDT / BTC)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Create Password</label>
+          <input type="password" required placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-brand-500">
+        </div>
+
+        <button type="submit" class="w-full bg-brand-500 hover:bg-brand-600 text-slate-950 font-black py-3.5 rounded-xl text-sm transition shadow-lg shadow-brand-500/20 mt-2">
+          Complete Registration →
+        </button>
+      </form>
+
+      <p class="text-center text-xs text-slate-500 mt-4">
+        Already have an account? 
+        <button @click="openSignupModal = false; openLoginModal = true" class="text-brand-400 hover:underline font-bold">Sign In</button>
+      </p>
+
+    </div>
+  </div>
+
+  <!-- LOGIN MODAL -->
+  <div x-show="openLoginModal" 
+       x-transition.opacity
+       class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md"
+       style="display: none;">
+    
+    <div @click.away="openLoginModal = false" 
+         class="glass-card rounded-3xl p-6 sm:p-8 max-w-md w-full border border-slate-800 shadow-2xl relative">
+      
+      <button @click="openLoginModal = false" class="absolute top-5 right-5 text-slate-400 hover:text-white text-lg">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="text-center mb-6">
+        <div class="w-12 h-12 rounded-2xl bg-cyber-cyan/10 border border-cyber-cyan/30 text-cyber-cyan flex items-center justify-center mx-auto text-xl mb-3">
+          <i class="fa-solid fa-right-to-bracket"></i>
+        </div>
+        <h3 class="text-2xl font-bold text-slate-100">Welcome Back</h3>
+        <p class="text-xs text-slate-400 mt-1">Sign in to access your active chat sessions.</p>
+      </div>
+
+      <form @submit.prevent="submitLogin" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Phone Number or Email</label>
+          <input type="text" required placeholder="Enter login credential" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-brand-500">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Password</label>
+          <input type="password" required placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-brand-500">
+        </div>
+
+        <button type="submit" class="w-full bg-brand-500 hover:bg-brand-600 text-slate-950 font-black py-3.5 rounded-xl text-sm transition mt-2">
+          Sign In to Dashboard
+        </button>
+      </form>
+
+      <p class="text-center text-xs text-slate-500 mt-4">
+        Don't have an account? 
+        <button @click="openLoginModal = false; openSignupModal = true" class="text-brand-400 hover:underline font-bold">Register Now</button>
+      </p>
+
+    </div>
+  </div>
+
+  <!-- NOTIFICATION BANNER (Alpine State) -->
+  <div x-show="toast.visible" 
+       x-transition
+       class="fixed bottom-6 right-6 z-50 bg-slate-900 border border-brand-500/50 text-slate-100 px-5 py-4 rounded-2xl shadow-2xl flex items-center space-x-3 max-w-sm"
+       style="display: none;">
+    <div class="w-8 h-8 rounded-full bg-brand-500/20 text-brand-400 flex items-center justify-center shrink-0">
+      <i class="fa-solid fa-check text-sm"></i>
+    </div>
+    <div>
+      <p class="text-xs font-bold text-white" x-text="toast.title"></p>
+      <p class="text-xs text-slate-400 mt-0.5" x-text="toast.message"></p>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="bg-slate-950 border-t border-slate-900 py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+      
+      <div class="flex items-center space-x-3">
+        <div class="w-8 h-8 rounded-lg bg-brand-500 flex items-center justify-center text-slate-950 font-black text-sm">
+          <i class="fa-solid fa-comments"></i>
+        </div>
+        <span class="text-lg font-bold text-slate-200">VeroraChat</span>
+      </div>
+
+      <p class="text-xs text-slate-500 text-center">
+        &copy; 2026 VeroraChat. All rights reserved. Encrypted Global Payout Engine.
+      </p>
+
+      <div class="flex items-center space-x-6 text-xs text-slate-400">
+        <a href="#" class="hover:text-brand-400 transition">Privacy Policy</a>
+        <a href="#" class="hover:text-brand-400 transition">Terms of Service</a>
+        <a href="#" class="hover:text-brand-400 transition">Contact Support</a>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- ALPINE APP LOGIC -->
+  <script>
+    function appState() {
+      return {
+        openSignupModal: false,
+        openLoginModal: false,
+        activeFaq: 1,
+        calcHours: 4,
+        calcSpeed: 30,
+        selectedFilter: 'All',
+        
+        // Demo Chat State
+        demoEarnings: 0.00,
+        demoMessageCount: 0,
+        userDemoMessage: '',
+        isTyping: false,
+
+        toast: {
+          visible: false,
+          title: '',
+          message: ''
+        },
+
+        clients: [
+          {
+            id: 1,
+            name: 'Sarah M.',
+            age: 29,
+            location: 'California, USA',
+            flag: '🇺🇸',
+            rate: 0.30,
+            status: 'Online Now',
+            region: 'USA',
+            avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=250',
+            bio: 'Looking for friendly daily chats about sports, travel, and movies.'
+          },
+          {
+            id: 2,
+            name: 'James L.',
+            age: 34,
+            location: 'London, UK',
+            flag: '🇬🇧',
+            rate: 0.25,
+            status: 'Online Now',
+            region: 'UK',
+            avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=250',
+            bio: 'Busy tech founder needing a casual pen-pal to converse with during breaks.'
+          },
+          {
+            id: 3,
+            name: 'Elena R.',
+            age: 26,
+            location: 'Toronto, Canada',
+            flag: '🇨🇦',
+            rate: 0.35,
+            status: 'Online Now',
+            region: 'Canada',
+            avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=250',
+            bio: 'Enthusiastic photographer seeking engaging conversations about art and life.'
+          },
+          {
+            id: 4,
+            name: 'Markus W.',
+            age: 31,
+            location: 'Berlin, Germany',
+            flag: '🇩🇪',
+            rate: 0.28,
+            status: 'Online Now',
+            region: 'Germany',
+            avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=250',
+            bio: 'Loves discussing international culture, language exchanges, and music.'
+          }
+        ],
+
+        activeClient: null,
+
+        chatHistories: {
+          1: [
+            { id: 1, sender: 'client', text: 'Hey there! How has your week been going so far?', time: '10:14 AM' }
+          ],
+          2: [
+            { id: 1, sender: 'client', text: 'Hello! I just finished a long workday. What are you up to?', time: '10:12 AM' }
+          ],
+          3: [
+            { id: 1, sender: 'client', text: 'Hi! I am planning a trip next month, any fun recommendations?', time: '10:05 AM' }
+          ],
+          4: [
+            { id: 1, sender: 'client', text: 'Guten Tag! Hope you are having a wonderful day!', time: '09:50 AM' }
+          ]
+        },
+
+        recentPayouts: [
+          { id: 1, name: 'Grace M.', country: 'Kenya', amount: 14.50, method: 'M-Pesa', time: '12s ago' },
+          { id: 2, name: 'Samuel O.', country: 'Uganda', amount: 28.00, method: 'MTN MoMo', time: '24s ago' },
+          { id: 3, name: 'Kevin N.', country: 'Kenya', amount: 9.25, method: 'M-Pesa', time: '41s ago' },
+          { id: 4, name: 'Anita B.', country: 'Tanzania', amount: 45.00, method: 'Bank Transfer', time: '1m ago' },
+          { id: 5, name: 'Dennis K.', country: 'Kenya', amount: 18.00, method: 'M-Pesa', time: '2m ago' },
+        ],
+
+        init() {
+          this.activeClient = this.clients[0];
+        },
+
+        get filteredClients() {
+          if (this.selectedFilter === 'All') return this.clients;
+          return this.clients.filter(c => c.region === this.selectedFilter);
+        },
+
+        get currentChatHistory() {
+          return this.chatHistories[this.activeClient.id] || [];
+        },
+
+        selectClient(client) {
+          this.activeClient = client;
+        },
+
+        sendDemoMessage() {
+          if (!this.userDemoMessage.trim()) return;
+
+          const clientId = this.activeClient.id;
+          const userMsg = this.userDemoMessage;
+          const timeNow = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+          // Add user message
+          this.chatHistories[clientId].push({
+            id: Date.now(),
+            sender: 'user',
+            text: userMsg,
+            time: timeNow
+          });
+
+          // Update earnings
+          this.demoEarnings += this.activeClient.rate;
+          this.demoMessageCount += 1;
+          this.userDemoMessage = '';
+
+          // Scroll to bottom
+          this.scrollToBottom();
+
+          // Simulated automated reply
+          this.isTyping = true;
+          setTimeout(() => {
+            this.isTyping = false;
+            const replies = [
+              "That's so interesting! Tell me more about that.",
+              "I completely agree with you! Thanks for sharing.",
+              "Awesome! I love chatting with someone as friendly as you.",
+              "Sounds fantastic! How long have you been doing that?"
+            ];
+            const randomReply = replies[Math.floor(Math.random() * replies.length)];
+
+            this.chatHistories[clientId].push({
+              id: Date.now(),
+              sender: 'client',
+              text: randomReply,
+              time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            });
+
+            this.scrollToBottom();
+          }, 1500);
+        },
+
+        scrollToBottom() {
+          this.$nextTick(() => {
+            const chatBox = document.getElementById('chat-box');
+            if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
+          });
+        },
+
+        submitRegistration() {
+          this.openSignupModal = false;
+          this.showToast('Account Created!', 'Your account has been set up. Check your SMS for verification.');
+        },
+
+        submitLogin() {
+          this.openLoginModal = false;
+          this.showToast('Welcome Back!', 'Redirecting to your active chatter portal...');
+        },
+
+        showToast(title, message) {
+          this.toast.title = title;
+          this.toast.message = message;
+          this.toast.visible = true;
+          setTimeout(() => {
+            this.toast.visible = false;
+          }, 4000);
+        }
+      }
+    }
+  </script>
+</body>
+</html>
